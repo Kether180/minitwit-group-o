@@ -1359,11 +1359,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/alexander180/Desktop/Devops/f-minitwit/feature-minitwit_c#/feature-minitwit_c#.csproj",
+      "projectUniqueName": "/home/alexander180/Desktop/Devops/minitwit-group-o/feature_minitwit_c#/feature-minitwit_c#.csproj",
       "projectName": "feature-minitwit_c#",
-      "projectPath": "/home/alexander180/Desktop/Devops/f-minitwit/feature-minitwit_c#/feature-minitwit_c#.csproj",
+      "projectPath": "/home/alexander180/Desktop/Devops/minitwit-group-o/feature_minitwit_c#/feature-minitwit_c#.csproj",
       "packagesPath": "/home/alexander180/.nuget/packages/",
-      "outputPath": "/home/alexander180/Desktop/Devops/f-minitwit/feature-minitwit_c#/obj/",
+      "outputPath": "/home/alexander180/Desktop/Devops/minitwit-group-o/feature_minitwit_c#/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/alexander180/.nuget/NuGet/NuGet.Config"

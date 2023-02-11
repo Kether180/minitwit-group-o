@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cVHYqJRD5LCdojzuTX46B3es5ABGks0v79Z2O51ZcBC2hB9t7xxjs9RwvwCHqmfLLGiECSVOcX9m28gXYqoqnA==",
+  "dgSpecHash": "4XXfuVqQ7/f8zd2571OGDrCGTefbtxrVGiLhNrXsErpUI2YCNHSWUOpFxevH/y5a819dDn4fOmghroh2eZJ/fA==",
   "success": true,
-  "projectFilePath": "/home/alexander180/Desktop/Devops/f-minitwit/feature-minitwit_c#/feature-minitwit_c#.csproj",
+  "projectFilePath": "/home/alexander180/Desktop/Devops/minitwit-group-o/feature_minitwit_c#/feature-minitwit_c#.csproj",
   "expectedPackageFiles": [
     "/home/alexander180/.nuget/packages/entityframework/6.4.4/entityframework.6.4.4.nupkg.sha512",
     "/home/alexander180/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
