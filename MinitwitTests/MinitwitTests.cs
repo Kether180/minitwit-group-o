@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System;
-using System.Data.Sqlite;
+using System.Data.SQLite;
 using Xunit; // unsure if this is needed
 //using Minitwit;
 namespace MinitwitTests;
@@ -107,11 +107,62 @@ public class MinitwitTests : IClassFixture<DatabaseFixture>
 
         // Act
         Minitwit.AddMessage(message);
-        result = Minitwit.get("/"); // pretty much stolen from python tests, most likely not correct
+        var result = Minitwit.get("/"); // pretty much stolen from python tests, most likely not correct
 
         // Assert
         Assert.Equal("test message 1", result);
     }
 
+    [Fact]
+    public void TestTimeline()
+    {
+        // Arrange
+        var db = _fixture.Db;
+        Minitwit.Register("user1", "default", "default", "email@example.com");
+        Minitwit.Login("user1", "default");
 
+
+        // Act
+        Minitwit.AddMessage("test message by user1");
+        Minitwit.Logout();
+
+        // Arrange
+        Minitwit.Register("user2", "default", "default", "email@example.com");
+        Minitwit.Login("user2", "default");
+
+        // Act
+        Minitwit.AddMessage("test message by user2");
+
+        // Assert both messages should be in the public timeline
+        Assert.Contains<String>("test message by user1",Minitwit.get("/public"));
+        Assert.Contains<String>("test message by user2",Minitwit.get("/public"));
+
+        // Assert user2 timeline should not have user1 message
+        Assert.DoesNotContain<String>("test message by user1",Minitwit.get("/"));
+        Assert.Contains<String>("test message by user2", Minitwit.get("/"));
+
+        // Act
+        Minitwit.FollowUser("user1");
+
+        // Assert user2 is following user1 and can see user1 messages
+        Assert.Contains<String>("You are now following &#34;user1&#34;",Minitwit.get("/user1/follow"));
+        Assert.Contains<String>("test message by user1",Minitwit.get("/"));
+        Assert.Contains<String>("test message by user2",Minitwit.get("/"));
+
+        // Assert user specific timelines only show own users messages
+        Assert.Contains<String>("test message by user1",Minitwit.get("/user1"));
+        Assert.DoesNotContain<String>("test message by user2",Minitwit.get("/user1"));
+
+        Assert.Contains<String>("test message by user2",Minitwit.get("/user2"));
+        Assert.DoesNotContain<String>("test message by user1",Minitwit.get("/user2"));
+
+        // Act
+        Minitwit.UnfollowUser("user1");
+
+        // Assert user2 is not following user1 and can not see user1 messages
+        Assert.Contains<String>("You are no longer following &#34;user1&#34;", Minitwit.get("/user1/unfollow") )
+        Assert.DoesNotContain<String>("test message by user1",Minitwit.get("/"));
+        Assert.Contains<String>("test message by user2",Minitwit.get("/"));
+
+    }
 }
