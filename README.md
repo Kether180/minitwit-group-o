@@ -16,8 +16,8 @@
 
 # Loging - logout feature
 
-- insert_user_in_db
-- get_user_in_db
+- insert_user_id_db
+- get_user_id_db
 
 # User specific feature
 
