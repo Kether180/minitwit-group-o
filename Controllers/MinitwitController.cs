@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Minitwit7.data;
 using Minitwit7.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Minitwit7.Controllers
 {
@@ -15,9 +14,20 @@ namespace Minitwit7.Controllers
     {
         private readonly DataContext _context;
 
-        public MinitwitController(DataContext context)
+        public MinitwitController(DataContext context) // Connect directly to the database 
         {
             _context = context;
+        }
+
+
+        [HttpPost]
+        [Route("/RegisterUser")]
+        public async Task<ActionResult<List<User>>> RegisterUser(User user) // registration endpoint - check user's registration errors on models
+        {                                                               //  we need to use  BCrypt.Net.BCrypt.HashPassword
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(_context.Users.ToList());
         }
 
         [HttpPost]
@@ -29,6 +39,7 @@ namespace Minitwit7.Controllers
 
             return Ok(_context.Users.ToList());
         }
+
 
         [HttpGet]
         [Route("/GetUsers")]
@@ -86,7 +97,7 @@ namespace Minitwit7.Controllers
             var user = _context.Users.Where(x => x.Username == username).FirstOrDefault();
             var flws = _context.Followers.Where(x => x.WhoId == user.UserId).ToList();
             foreach (var follower in flws)
-            { 
+            {
                 var userF = _context.Users.Where(x => x.UserId == follower.WhomId).FirstOrDefault();
                 followers.Add(userF);
             }
