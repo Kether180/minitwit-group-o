@@ -62,11 +62,13 @@ namespace Minitwit7.Controllers
 
         [HttpGet]
         [Route("/GetMsgs")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<List<Message>>> GetMsgs()
         {
             var msgs = _context.Messages.ToList();
-
-            return Ok(msgs);
+            if(msgs == null){return NoContent();}
+            else{return Ok(msgs);}
         }
 
         [HttpGet]
@@ -105,8 +107,5 @@ namespace Minitwit7.Controllers
 
             return Ok(followers);
         }
-
-
     }
 }
-
