@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Minitwit7.data;
 using Minitwit7.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Minitwit7.Controllers
 {
@@ -15,9 +14,20 @@ namespace Minitwit7.Controllers
     {
         private readonly DataContext _context;
 
-        public MinitwitController(DataContext context)
+        public MinitwitController(DataContext context) // Connect directly to the database 
         {
             _context = context;
+        }
+
+
+        [HttpPost]
+        [Route("/RegisterUser")]
+        public async Task<ActionResult<List<User>>> RegisterUser(User user) // registration endpoint - check user's registration errors on models
+        {                                                               //  we need to use  BCrypt.Net.BCrypt.HashPassword
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(_context.Users.ToList());
         }
 
         [HttpPost]
@@ -28,26 +38,6 @@ namespace Minitwit7.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(_context.Users.ToList());
-        }
-
-        [HttpPost]
-        [Route("/AddMsg")]
-        public async Task<ActionResult<List<Message>>> AddUMsg(Message msg)
-        {
-            _context.Messages.Add(msg);
-            await _context.SaveChangesAsync();
-            return Ok(_context.Messages.ToList());
-        }
-
-        [HttpGet]
-        [Route("/GetMsgs")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult<List<Message>>> GetMsgs()
-        {
-            var msgs = _context.Messages.ToList();
-            if(msgs == null){return NoContent();}
-            else{return Ok(msgs);}
         }
     }
 }
