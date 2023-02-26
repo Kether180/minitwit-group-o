@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Minitwit7.data;
 using Minitwit7.Models;
+using System.Security.Cryptography;
 
 namespace Minitwit7.Controllers
 {
@@ -31,6 +33,8 @@ namespace Minitwit7.Controllers
 
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesErrorResponseType(typeof(Error))]
         [Route("/register")]
         public async Task<ActionResult<List<User>>> RegisterUser(CreateUser user, int latest = -1) // registration endpoint - check user's registration errors on models
         {                                                               //  we need to use  BCrypt.Net.BCrypt.HashPassword
@@ -38,13 +42,28 @@ namespace Minitwit7.Controllers
 
             User newUser = new User();
 
-            if (helpers.getUserIdByUsername(_context, user.username) == -1)
-                newUser.Username = user.username;
+            if (user.username == null || user.username == "")
+                return BadRequest(new Error("You have to enter a username"));
+            
+            else if (user.email == null || !user.email.Contains("@"))
+                return BadRequest(new Error("You have to enter a valid email address"));
+
+            else if (user.password == null || user.password == "")
+                return BadRequest(new Error("You have to enter a password"));
+
+            else if (helpers.getUserIdByUsername(_context, user.username) != -1)
+                return BadRequest(new Error("The username is already taken"));
+                
+            
+            newUser.Username = user.username;
+            newUser.Email = user.email;
 
 
+            newUser.PwHash = user.password;
+            
+           
 
-
-            _context.Users.Add(user);
+            _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
             return Ok(_context.Users.ToList());
@@ -93,15 +112,13 @@ namespace Minitwit7.Controllers
         }
 
         [HttpGet]
-        [Route("/msgs")]
+        [Route("/msgs/{username}")]
         public async Task<ActionResult<List<Message>>> GetMsgsByUser(string username, int latest = -1)
         {
             helpers.updateLatest(latest);
             var user = _context.Users.Where(x => x.Username == username).FirstOrDefault();
             if(user == null) { return NoContent();}
             var msgs = _context.Messages.Where(x => x.AuthorId == user.UserId).ToList();
-
-            await Task.CompletedTask;
 
             return Ok(msgs);
         }
@@ -164,6 +181,17 @@ namespace Minitwit7.Controllers
                 return u.UserId;
             return -1;
             
+        }
+    }
+
+    public class Error
+    {
+        public int status { get; set; }
+        public string error_msg { get; set; }
+        public Error(string _error_msg, int _status = 400)
+        {
+            error_msg = _error_msg;
+            status = _status;
         }
     }
 
