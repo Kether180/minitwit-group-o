@@ -1,3 +1,7 @@
 minitwit-backend/bin/
 minitwit-backend/obj/
 minitwit-backend/.vs/
+
+
+MinitwitTests/obj/
+MinitwitTests/bin/
