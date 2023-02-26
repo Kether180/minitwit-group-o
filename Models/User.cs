@@ -5,10 +5,7 @@ namespace Minitwit7.Models
 {
     public class User
     {
-
-        [Range(0, 100000, ErrorMessage = "The UserId cannot be more than 1000 numbers")]
-        [Required(ErrorMessage = "You have to enter a userId")]
-        // [CustomValidation(typeof(User), "UniqueId, ErrorMessage = "The userId is already taken.")]
+        [Required]
         public int UserId { get; set; }
 
         // [CustomValidation(typeof(User), "UniqueUsername", ErrorMessage = "The username is already taken.")]

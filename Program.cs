@@ -1,6 +1,7 @@
 ﻿using Minitwit7.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,4 +32,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
