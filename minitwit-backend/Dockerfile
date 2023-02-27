@@ -16,4 +16,4 @@ COPY --from=build-env /App/out .
 
 EXPOSE 5050
 
-ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
+ENTRYPOINT ["dotnet", "MiniTwit.dll"]
