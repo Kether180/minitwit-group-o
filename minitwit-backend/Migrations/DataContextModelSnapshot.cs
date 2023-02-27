@@ -19,16 +19,13 @@ namespace MiniTwit.Migrations
 
             modelBuilder.Entity("Minitwit7.Models.Follower", b =>
                 {
-                    b.Property<int>("WhoId")
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("WhomId")
+                    b.Property<int>("FollowsId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("WhoId", "WhomId");
+                    b.HasKey("UserId", "FollowsId");
 
                     b.ToTable("Followers", (string)null);
                 });
@@ -73,7 +70,6 @@ namespace MiniTwit.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.HasKey("UserId");

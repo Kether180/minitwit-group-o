@@ -66,13 +66,13 @@ namespace Minitwit7.data
 
             modelBuilder.Entity<Follower>(b =>
             {
-                b.Property<int>("WhoId")
+                b.Property<int>("UserId")
                     .HasColumnType("INTEGER");
 
-                b.Property<int>("WhomId")
+                b.Property<int>("FollowsId")
                     .HasColumnType("INTEGER");
 
-                b.HasKey(x => new { x.WhoId, x.WhomId });
+                b.HasKey(x => new { x.UserId, x.FollowsId });
 
                 b.ToTable("Followers");
             });

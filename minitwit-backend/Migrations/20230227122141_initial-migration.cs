@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MiniTwit.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialmigration : Migration
+    public partial class initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,13 +15,12 @@ namespace MiniTwit.Migrations
                 name: "Followers",
                 columns: table => new
                 {
-                    WhoId = table.Column<int>(type: "INTEGER", nullable: false),
-                    WhomId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FollowsId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Followers", x => new { x.WhoId, x.WhomId });
+                    table.PrimaryKey("PK_Followers", x => new { x.UserId, x.FollowsId });
                 });
 
             migrationBuilder.CreateTable(
@@ -46,7 +45,7 @@ namespace MiniTwit.Migrations
                 {
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Username = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     PwHash = table.Column<string>(type: "TEXT", nullable: false)
                 },
