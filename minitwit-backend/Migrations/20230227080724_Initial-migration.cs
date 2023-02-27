@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace MiniTwit.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class Initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,9 +30,9 @@ namespace MiniTwit.Migrations
                 {
                     MessageId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AuthorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AuthorId = table.Column<int>(type: "TINTEGER", nullable: false),
                     text = table.Column<string>(type: "TEXT", nullable: false),
-                    PubDate = table.Column<int>(type: "INTEGER", nullable: false),
+                    PubDate = table.Column<DateTime>(type: "Date", nullable: false),
                     Flagged = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

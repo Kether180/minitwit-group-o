@@ -47,13 +47,13 @@ namespace Minitwit7.data
                     .HasColumnType("INTEGER");
 
                 b.Property<int>("AuthorId")
-                    .HasColumnType("INTEGER");
+                    .HasColumnType("TINTEGER");
 
                 b.Property<int>("Flagged")
                     .HasColumnType("INTEGER");
 
-                b.Property<int>("PubDate")
-                    .HasColumnType("INTEGER");
+                b.Property<DateTime>("PubDate")
+                    .HasColumnType("Date");
 
                 b.Property<string>("text")
                     .IsRequired()
