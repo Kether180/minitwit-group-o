@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Minitwit7.data;
 using Minitwit7.Models;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 
 namespace Minitwit7.Controllers
 {
@@ -100,6 +101,7 @@ namespace Minitwit7.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("/msgs")]
         public async Task<ActionResult<List<MessageRes>>> GetMsgs(int no = 100, int latest = -1)
         {
@@ -155,6 +157,8 @@ namespace Minitwit7.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("/msgs/{username}")]
         public async Task<ActionResult<List<MessageRes>>> GetMsgsByUser(string username, int latest = -1)
         {
@@ -184,16 +188,56 @@ namespace Minitwit7.Controllers
         }
 
         [HttpPost]
+        [ProducesErrorResponseType(typeof(Error))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Route("/fllws/{username}")]
-        public async Task<ActionResult<List<Follower>>> AddFollower(string username, Follower follower, int latest = -1)
+        public async Task<ActionResult<List<Follower>>> AddFollower(string username, FollowRequest folReq, int latest = -1)
         {
             Helpers.UpdateLatest(latest);
 
+            int userId = Helpers.GetUserIdByUsername(_context, username);
+            if (userId == -1)
+                return BadRequest(new Error("Username does not match a user"));
 
-            _context.Followers.Add(follower);
+
+            if (folReq.follow != null && folReq.unfollow == null)
+            {
+                int req_userId = Helpers.GetUserIdByUsername(_context, folReq.follow);
+                if (req_userId == -1)
+                    return BadRequest(new Error("The user to follow was not found"));
+
+                Follower? followerEntity = _context.Followers.Where(x => x.UserId == userId && x.FollowsId == req_userId).FirstOrDefault();
+
+                if (followerEntity != null)
+                    return BadRequest(new Error("The user is already following"));
+
+                _context.Followers.Add(new Follower()
+                {
+                    UserId = userId,
+                    FollowsId = req_userId
+                });
+            }
+            else if (folReq.unfollow != null && folReq.follow == null) {
+                int req_userId = Helpers.GetUserIdByUsername(_context, folReq.unfollow);
+                if (req_userId == -1)
+                    return BadRequest(new Error("The user to follow was not found"));
+
+                Follower? followerEntity = _context.Followers.Where(x => x.UserId == userId && x.FollowsId == req_userId).FirstOrDefault();
+
+                if (followerEntity == null)
+                    return BadRequest(new Error("The user isn't following"));
+
+                _context.Followers.Remove(_context.Followers.Where(x => x.UserId == userId && x.FollowsId == req_userId).First());
+            }
+            else
+            {
+                return BadRequest(new Error("You need to specify ONE of either follow or unfollow"));
+            }
+
             await _context.SaveChangesAsync();
 
-            return Ok(_context.Followers.ToList());
+            return NoContent();
         }
 
         [HttpGet]
@@ -221,6 +265,8 @@ namespace Minitwit7.Controllers
                     }
                     )
                 .Where(t => t.userId == userId).Select(v => v.Follows).ToList();
+
+            await Task.CompletedTask;
 
             return Ok(new FollowsRes() { follows=followingRes});
         }
@@ -295,5 +341,11 @@ namespace Minitwit7.Controllers
     public class FollowsRes
     {
         public List<string> follows { get; set; }
+    }
+
+    public class FollowRequest
+    {
+        public string? follow { get; set; } = null;
+        public string? unfollow { get; set; } = null;
     }
 }
