@@ -1,7 +1,9 @@
 ﻿using Minitwit7.data;
 using Microsoft.EntityFrameworkCore;
+using MySql.EntityFrameworkCore.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-
 
 var app = builder.Build();
 
@@ -25,7 +26,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+using (var scope = app.Services.CreateScope())
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<DataContext>>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+    while (!dbContext.Database.CanConnect())
+    {
+        logger.LogInformation("Waiting for database...");
+        Thread.Sleep(1000);
+    }
+    dbContext.Database.EnsureCreated();
+}
+
+
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

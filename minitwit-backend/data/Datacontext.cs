@@ -7,12 +7,17 @@ namespace Minitwit7.data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
+            
         }
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Follower> Followers => Set<Follower>();
         public DbSet<Message> Messages => Set<Message>();
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,7 +52,7 @@ namespace Minitwit7.data
                     .HasColumnType("INTEGER");
 
                 b.Property<int>("AuthorId")
-                    .HasColumnType("TINTEGER");
+                    .HasColumnType("INTEGER");
 
                 b.Property<int>("Flagged")
                     .HasColumnType("INTEGER");
