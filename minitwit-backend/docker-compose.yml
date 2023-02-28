@@ -1,0 +1,11 @@
+version: ‘3’
+services:
+  dbserver: 
+    image: <Need link to db image>
+    ports: 
+    - "5001:5001"
+
+  webserver:
+    image: <Need link to webserver image>
+    ports:
+    - “8080:8080”
