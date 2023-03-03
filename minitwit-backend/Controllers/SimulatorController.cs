@@ -36,7 +36,7 @@ namespace Minitwit7.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesErrorResponseType(typeof(Error))]
         [Route("/register")]
-        public async Task<ActionResult<List<User>>> RegisterUser(CreateUser user, int latest = -1)
+        public async Task<ActionResult<List<User>>> RegisterUser([FromBody] CreateUser user, int latest = -1)
         {
             Helpers.UpdateLatest(latest);
 
@@ -48,7 +48,7 @@ namespace Minitwit7.Controllers
             else if (user.email == null || !user.email.Contains("@"))
                 return BadRequest(new Error("You have to enter a valid email address"));
 
-            else if (user.password == null || user.password == "")
+            else if (user.pwd == null || user.pwd == "")
                 return BadRequest(new Error("You have to enter a password"));
 
             else if (Helpers.GetUserIdByUsername(_context, user.username) != -1)
@@ -68,7 +68,7 @@ namespace Minitwit7.Controllers
             }
 
             // Hash the password with the salt
-            var pbkdf2 = new Rfc2898DeriveBytes(user.password, salt, 10000, HashAlgorithmName.SHA256);
+            var pbkdf2 = new Rfc2898DeriveBytes(user.pwd, salt, 10000, HashAlgorithmName.SHA256);
             byte[] hash = pbkdf2.GetBytes(20);
 
             // combine the salt and password into one variable, with the salt in the first 16 bytes,
@@ -117,7 +117,7 @@ namespace Minitwit7.Controllers
                 {
                     content = msg.text,
                     pub_date = msg.PubDate,
-                    username = username
+                    user = username
                 });
             }
 
@@ -132,7 +132,7 @@ namespace Minitwit7.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesErrorResponseType(typeof(Error))]
         [Route("/msgs/{username}")]
-        public async Task<ActionResult<List<Message>>> AddUMsg(string username, CreateMessage msg, int latest = -1)
+        public async Task<ActionResult<List<Message>>> AddUMsg(string username, [FromBody] CreateMessage msg, int latest = -1)
         {
             Helpers.UpdateLatest(latest);
 
@@ -151,7 +151,7 @@ namespace Minitwit7.Controllers
             _context.Messages.Add(newMsg);
             await _context.SaveChangesAsync();
 
-            return Ok(_context.Messages.ToList());
+            return NoContent();
         }
 
 
@@ -177,14 +177,14 @@ namespace Minitwit7.Controllers
                 res.Add(new MessageRes()
                 {
                     content = msg.text,
-                    username = username,
+                    user = username,
                     pub_date = msg.PubDate
                 });
             }
 
             await Task.CompletedTask;
 
-            return Ok(res);
+            return StatusCode(204, res);
         }
 
         [HttpPost]
@@ -192,7 +192,7 @@ namespace Minitwit7.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Route("/fllws/{username}")]
-        public async Task<ActionResult<List<Follower>>> AddFollower(string username, FollowRequest folReq, int latest = -1)
+        public async Task<ActionResult<List<Follower>>> AddFollower(string username, [FromBody] FollowRequest folReq, int latest = -1)
         {
             Helpers.UpdateLatest(latest);
 
@@ -323,14 +323,14 @@ namespace Minitwit7.Controllers
     {
         public string username { get; set; }
         public string email { get; set; }
-        public string password { get; set; }
+        public string pwd { get; set; }
     }
 
     public class MessageRes
     {
         public string content { get; set; }
         public DateTime pub_date { get; set; }
-        public string username { get; set; }
+        public string user { get; set; }
     }
 
     public class CreateMessage
