@@ -15,4 +15,7 @@ obj/
 
 local-volumes/
 data/
-node_modules
+
+#frontend
+
+minitwit-frontend/node_modules
