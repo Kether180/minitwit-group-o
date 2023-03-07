@@ -8,7 +8,7 @@ function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const {loggedUser, login, logout} = useContext(UserContext);
-   
+
     let navigation = useNavigate();
     const goToRegister = () => {
         let path = '/Register';
@@ -24,8 +24,8 @@ function Login() {
 
     const handleUsernameChange= (event) => {
         setUsername(event.target.value);
-    };  
-    
+    };
+
     const handlePasswordChange= (event) => {
         setPassword(event.target.value);
     } ;
@@ -33,7 +33,7 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const response = await fetch("/api/login" , 
+        const response = await fetch("/api/login" ,
         {
             headers: {
                 'Accept': 'application/json',
@@ -57,10 +57,10 @@ function Login() {
 
     return (
         <form onSubmit={handleSubmit}>
-        <div className="container">        
+        <div className="container">
             <div className='wrapper'>
                 <div className="login-form">
-                
+
 
                     <input type="username" placeholder='Username' value={username} onChange={handleUsernameChange} className="input-field form-item"/>
                     <input type="text" placeholder='E-mail' className="input-field form-item" />
@@ -70,7 +70,7 @@ function Login() {
                         If you do not have an account, then register here!
                     </p>
                     <button className="action-button form-item" onClick={goToRegister}>Register here</button>
-                
+
                 </div>
             </div>
         </div>
