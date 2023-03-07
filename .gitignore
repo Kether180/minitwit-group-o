@@ -8,3 +8,7 @@ _MySQL_Init_Script/
 
 MinitwitTests/obj/
 MinitwitTests/bin/
+
+#frontend
+
+minitwit-frontend/node_modules 
