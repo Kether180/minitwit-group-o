@@ -24,7 +24,7 @@ var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 			optional: true)
 		.Build();
 
-builder.Host.UseSerilog((context, configuration)  => 
+builder.Host.UseSerilog((context, configuration)  =>
     configuration.Enrich.FromLogContext()
     .Enrich.WithMachineName()
     .WriteTo.Debug()
