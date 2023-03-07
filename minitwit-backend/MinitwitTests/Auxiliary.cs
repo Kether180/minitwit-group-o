@@ -1,5 +1,5 @@
-using System;
-using MinitwitTests;
+using Xunit;
+using Minitwit7.data;
 
 
 public class Auxiliary {
@@ -11,7 +11,7 @@ public class Auxiliary {
         this.fixture = fixture;
     }
 
-    public MiniTwitContext CreateContext()
+    public DataContext CreateContext()
     {
         return fixture.CreateContext();
     }
