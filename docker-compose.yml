@@ -8,8 +8,7 @@ services:
      ports:
       - "5432:5432"
      volumes:
-       - dbdata:/var/lib/mysql
-       - ./_MySQL_Init_Script:/docker-entrypoint-initdb.d
+       - /mnt/volumedb/data:/var/lib/postgresql/data
      restart: always
 
   api:
@@ -20,6 +19,3 @@ services:
     - db
     ports:
     - "5050:5050"
-
-volumes:
-    dbdata:
