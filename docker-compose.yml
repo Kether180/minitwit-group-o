@@ -8,7 +8,8 @@ services:
      ports:
       - "5432:5432"
      volumes:
-       - /mnt/volumedb/data:/var/lib/postgresql/data
+      - ./database-data:/var/lib/postgresql/data # To run locally uncomment this
+      # - /mnt/volumedb/data:/var/lib/postgresql/data # To run on server uncomment this
      restart: always
 
   api:

@@ -5,9 +5,9 @@ minitwit-backend/minitwit.db
 minitwit-backend/.vagrant/
 
 _MySQL_Init_Script/
+database-data/
 
 MinitwitTests/obj/
 MinitwitTests/bin/
-
 bin/
 obj/
