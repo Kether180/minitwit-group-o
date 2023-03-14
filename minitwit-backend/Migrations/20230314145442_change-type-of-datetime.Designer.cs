@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MiniTwit.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230307132215_change-DateTime-db-type")]
-    partial class changeDateTimedbtype
+    [Migration("20230314145442_change-type-of-datetime")]
+    partial class changetypeofdatetime
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,7 @@ namespace MiniTwit.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("PubDate")
-                        .HasColumnType("Timestamp");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("text")
                         .IsRequired()

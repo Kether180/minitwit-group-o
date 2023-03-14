@@ -50,7 +50,7 @@ namespace MiniTwit.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("PubDate")
-                        .HasColumnType("Timestamp");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("text")
                         .IsRequired()

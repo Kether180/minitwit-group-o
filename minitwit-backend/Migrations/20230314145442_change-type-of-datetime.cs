@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace MiniTwit.Migrations
 {
     /// <inheritdoc />
-    public partial class changeDateTimedbtype : Migration
+    public partial class changetypeofdatetime : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +14,7 @@ namespace MiniTwit.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "PubDate",
                 table: "Messages",
-                type: "Timestamp",
+                type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "Date");
@@ -30,7 +29,7 @@ namespace MiniTwit.Migrations
                 type: "Date",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "Timestamp");
+                oldType: "timestamp with time zone");
         }
     }
 }
