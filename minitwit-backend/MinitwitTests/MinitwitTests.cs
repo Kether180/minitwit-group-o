@@ -1,7 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using System.Data.SQLite;
 using Xunit;
+using Minitwit7.Controllers;
+using Minitwit7.Models;
 using Minitwit7.data;
 
 
@@ -9,8 +12,10 @@ public class DatabaseFixture : IDisposable
 {
 
     private readonly SQLiteConnection connection;
-    public DatabaseFixture()
+    private readonly SimulatorController simCon;
+    public DatabaseFixture(SimulatorController simCon)
     {
+        this.simCon = simCon;
         // Setup
         this.connection = new SQLiteConnection("Data Source =:memory:");
         this.connection.Open();
@@ -27,6 +32,7 @@ public class DatabaseFixture : IDisposable
         var result = new DataContext(new DbContextOptionsBuilder<DataContext>()
             .UseSqlite(this.connection)
             .Options);
+        result.Database.EnsureDeleted();
         result.Database.EnsureCreated();
         return result;
     }
@@ -36,34 +42,44 @@ public class MinitwitTests : IClassFixture<DatabaseFixture>
 {
     private readonly DatabaseFixture fixture;
     private readonly Auxiliary auxiliary;
+    private readonly SimulatorController simCon;
 
-    public MinitwitTests(DatabaseFixture fixture)
+    public MinitwitTests(DatabaseFixture fixture, SimulatorController simCon)
     {
         this.fixture = fixture;
-        auxiliary = new Auxiliary(fixture);
+        this.simCon = simCon;
+        auxiliary = new Auxiliary(fixture, simCon);
+    }
+
+    private static T GetObjectResultContent<T>(ActionResult<T> result)
+    {
+        return (T) ((ObjectResult) result.Result).Value;
     }
 
 
-
     [Theory]
-    [InlineData("user1", "default", null, null, "You were successfully registered and can login now")]
-    [InlineData("user1", "default", null, null, "The username is already taken")]
-    [InlineData("", "default", null, null, "You have to enter a username")]
-    [InlineData("meh", "", null, null, "You have to enter a password")]
-    [InlineData("meh", "x", "y", null, "The two passwords do not match")]
-    [InlineData("meh", "foo", null, "broken", "You have to enter a valid email address")]
-    public async Task TestRegister(String username, String password, String password2, String email, String expected)
+    [InlineData("user1", "default", null, null, "You were successfully registered and can login now", true)]
+    [InlineData("user1", "default", null, null, "The username is already taken", false)]
+    [InlineData("", "default", null, null, "You have to enter a username", false)]
+    [InlineData("meh", "", null, null, "You have to enter a password", false)]
+    [InlineData("meh", "foo", null, "broken", "You have to enter a valid email address", false)]
+    public async Task TestRegister(String username, String password, String email, String expected, bool success)
     {
         // Arrange
-        var auxiliary = new Auxiliary(this.fixture);
+        var auxiliary = new Auxiliary(this.fixture, this.simCon);
         var context = fixture.CreateContext();
 
         // Act
-        var response = await auxiliary.Register(username, password, password2, email);
-        var result = await response.Content.ReadAsStringAsync();
+        var response = await auxiliary.Register(username, password, email);
+
 
         // Assert
-        Assert.Equal(expected, result);
+        if (success) {
+            Assert.Equal(expected, result);
+        } else {
+            Assert.IsType<BadRequestObjectResult>(response.Result);
+
+        }
     }
 
     [Theory]

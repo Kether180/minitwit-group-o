@@ -1,22 +1,24 @@
 using Xunit;
-using Minitwit7.data;
+using Minitwit7.Controllers;
+using Minitwit7.Models;
+using Microsoft.AspNetCore.Mvc;
+
 
 
 public class Auxiliary {
 
     private readonly DatabaseFixture fixture;
+    private readonly SimulatorController simCon;
 
-    public Auxiliary(DatabaseFixture fixture)
+    public Auxiliary(DatabaseFixture fixture, SimulatorController simCon)
     {
         this.fixture = fixture;
+        this.simCon = simCon;
     }
 
-    public DataContext CreateContext()
-    {
-        return fixture.CreateContext();
-    }
 
-    public async Task<HttpResponseMessage> Register(string username, string password, string? password2 = null, string? email = null)
+
+    public async Task<ActionResult<List<User>>> Register(string username, string password, string? password2 = null, string? email = null)
     {
         if (password2 == null)
         {
@@ -27,18 +29,14 @@ public class Auxiliary {
             email = username + "@example.com";
         }
 
-        var context = CreateContext();
-
-        var user = new Dictionary<string, string>
+        var user = new CreateUser()
         {
-            { "username", username },
-            { "password", password },
-            { "password2", password2 },
-            { "email", email }
+            username = username,
+            email = email,
+            pwd = password
         };
 
-        var content = new FormUrlEncodedContent(user);
-        var response = await context.Client.PostAsync("/register", content).Result;
+        var response = await simCon.RegisterUser(user);
         return response;
     }
 
