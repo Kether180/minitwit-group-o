@@ -8,3 +8,6 @@ _MySQL_Init_Script/
 
 MinitwitTests/obj/
 MinitwitTests/bin/
+
+bin/
+obj/
