@@ -1,0 +1,25 @@
+version: '3.0'
+services:
+  db: 
+     image: postgres:14.1-alpine
+     environment:
+       POSTGRES_USER: dbuser
+       POSTGRES_PASSWORD: dbuserpassword
+     ports:
+      - "5432:5432"
+     volumes:
+       - dbdata:/var/lib/mysql
+       - ./_MySQL_Init_Script:/docker-entrypoint-initdb.d
+     restart: always
+
+  api:
+    image: itudevopsgroupo/minitwit-backend:runtime
+    build:
+      context: ./minitwit-backend
+    depends_on:
+    - db
+    ports:
+    - "5050:5050"
+
+volumes:
+    dbdata:
