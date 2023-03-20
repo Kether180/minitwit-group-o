@@ -1,13 +1,9 @@
 
-using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SQLite;
-using Microsoft.EntityFrameworkCore.Sqlite;
 using Xunit;
 using Minitwit7.Controllers;
 using Minitwit7.data;
-using Minitwit7.Models;
 
 public class MinitwitTests : IDisposable
 {
@@ -33,13 +29,6 @@ public class MinitwitTests : IDisposable
         // Teardown
         context.Dispose();
     }
-    private static T GetObjectResultContent<T>(ActionResult<T> result)
-    {
-        return (T) ((ObjectResult) result.Result).Value;
-    }
-
-
-
 
     [Fact]
     public async Task test_create_user_successful(){
@@ -85,17 +74,93 @@ public class MinitwitTests : IDisposable
         var followReq = new FollowRequest {
             follow = "TestUser2"
         };
-        var expectedFollowerList = new List<User>();
 
 
         // Act
         var result = await simCon.AddFollower("TestUser1", followReq);
-        var followers = await simCon.GetUserFollowers("TestUser2");
-        expectedFollowerList.Add(context.Users.Where(u => u.UserId == 1).First());
+        var followerCount = context.Followers.Where(u => u.UserId == 1 && u.FollowsId == 2).Count();
 
         // Assert
         Assert.IsType<NoContentResult>(result.Result);
-       // Assert.Equal(expectedFollowerList,followers.Value);
+        Assert.Equal(1, followerCount);
     }
 
+    [Fact]
+    public async Task test_follow_unsuccessful(){
+        // Arrange
+        var followReq = new FollowRequest {
+            follow = "TestUser1337"
+        };
+
+        // Act
+        var result = await simCon.AddFollower("TestUser1", followReq);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task test_follow_unfollow_successful(){
+        // Arrange
+        var followReq = new FollowRequest {
+            follow = "TestUser2"
+        };
+
+        var unfollowReq = new FollowRequest {
+            unfollow = "TestUser2"
+        };
+
+        // Act
+        await simCon.AddFollower("TestUser1", followReq);
+        var result = await simCon.AddFollower("TestUser1", unfollowReq);
+        var followerCount = context.Followers.Where(u => u.UserId == 1 && u.FollowsId == 2).Count();
+
+        // Assert
+        Assert.IsType<NoContentResult>(result.Result);
+        Assert.Equal(0, followerCount);
+    }
+
+    [Fact]
+    public async Task test_unfollow_while_not_following(){
+        // Arrange
+        var unfollowReq = new FollowRequest {
+            unfollow = "TestUser2"
+        };
+
+        // Act
+        var result = await simCon.AddFollower("TestUser1", unfollowReq);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task test_post_message_successful(){
+        // Arrange
+        var msg1 = new CreateMessage{
+            content = "Test message"
+        };
+
+        // Act
+        var result = await simCon.AddUMsg("TestUser1", msg1);
+        var msgCount = context.Messages.Where(a => a.AuthorId == 1).Count();
+
+        // Assert
+        Assert.IsType<NoContentResult>(result.Result);
+        Assert.Equal(1, msgCount);
+    }
+
+    [Fact]
+    public async Task test_post_message_unsuccessful(){
+        // Arrange
+        var msg1 = new CreateMessage{
+            content = "Test message"
+        };
+
+        // Act
+        var result = await simCon.AddUMsg("TestUser1337", msg1);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+    }
 }
