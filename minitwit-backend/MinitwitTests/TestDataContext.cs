@@ -1,5 +1,3 @@
-using System.Reflection.Metadata;
-using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Minitwit7.Models;
 using Minitwit7.data;
