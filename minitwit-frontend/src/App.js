@@ -11,7 +11,6 @@ import Navbar from "./components/Navbar";
 function App() {
   return (
     <div className="App">
-
         <Router>
           <UserProvider>
             <Navbar />
@@ -22,7 +21,6 @@ function App() {
             </Routes>
           </UserProvider>
         </Router>
-
     </div>
   );
 }

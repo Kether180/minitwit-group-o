@@ -75,10 +75,8 @@ function Login() {
             </div>
         </div>
         </form>
-
     );
 
 }
 
 export default Login;
-
