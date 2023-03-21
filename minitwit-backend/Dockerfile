@@ -1,9 +1,19 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0-bullseye-slim-amd64  AS build-env
+
+
+ARG TARGETARCH
+ARG TARGETOS
+
+RUN arch=$TARGETARCH \
+    && if [ "$arch" = "amd64" ]; then arch="x64"; fi \
+    && echo $TARGETOS-$arch > /tmp/rid
+    
 WORKDIR /App
 
 # Copy everything
 COPY *.csproj ./
 # Restore as distinct layers
+
 RUN dotnet restore
 COPY . ./
 # Build and publish a release
@@ -16,4 +26,4 @@ COPY --from=build-env /App/out .
 
 EXPOSE 5050
 
-ENTRYPOINT ["dotnet", "MiniTwit.dll"]
+# ENTRYPOINT ["dotnet", "MiniTwit.dll"]
