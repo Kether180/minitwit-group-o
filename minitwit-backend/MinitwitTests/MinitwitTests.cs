@@ -68,6 +68,42 @@ public class MinitwitTests : IDisposable
         Assert.IsType<BadRequestObjectResult>(result.Result);
     }
 
+    [Theory]
+    [InlineData("TestUser1", "user1")]
+    [InlineData("TestUser2","user2")]
+    [InlineData("TestUser3","user3")]
+    public async Task test_login_successful(String username, String password){
+        // Arrange
+        var loginReq = new LoginRequest {
+            username = username,
+            pwd = password
+        };
+
+        // Act
+        var result = await simCon.Login(loginReq);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result.Result);
+    }
+
+    [Theory]
+    [InlineData(null, null)]
+    [InlineData("TestUser1337","user1337")]
+    [InlineData("TestUser3","user1")]
+    public async Task test_login_unsuccessful(String username, String password){
+        // Arrange
+        var loginReq = new LoginRequest {
+            username = username,
+            pwd = password
+        };
+
+        // Act
+        var result = await simCon.Login(loginReq);
+
+        // Assert
+        Assert.IsType<UnauthorizedObjectResult>(result.Result);
+    }
+
     [Fact]
     public async Task test_follow_successful(){
         // Arrange
