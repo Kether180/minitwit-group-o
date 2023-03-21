@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Minitwit7.data;
-using Minitwit7.Models;
+using Minitwit.data;
+using Minitwit.Models;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 
-namespace Minitwit7.Controllers
+namespace Minitwit.Controllers
 {
     [Route("api/[controller]")]
     public class SimulatorController : ControllerBase
@@ -19,6 +19,20 @@ namespace Minitwit7.Controllers
         public SimulatorController(DataContext context) // Connect directly to the database 
         {
             _context = context;
+        }
+
+        [HttpGet]
+        [Route("/")]
+        public ActionResult<Status> getStatus()
+        {
+            int latest = Helpers.GetLatest();
+            int userCount = _context.Users.Count();
+
+            return new Status {
+                State = "Running",
+                LatestRequest = latest,
+                UserCount = userCount
+            };
         }
 
         [HttpGet]
@@ -306,12 +320,19 @@ namespace Minitwit7.Controllers
     public class Error
     {
         public int status { get; set; }
-        public string error_msg { get; set; }
+        public string error_msg { get; set; } = "";
         public Error(string _error_msg, int _status = 400)
         {
             error_msg = _error_msg;
             status = _status;
         }
+    }
+
+    public class Status
+    {
+        public string State { get; set; } = "";
+        public int UserCount { get; set; }
+        public int LatestRequest { get; set; }
     }
 
     public class LatestRes
@@ -321,31 +342,37 @@ namespace Minitwit7.Controllers
 
     public class CreateUser
     {
-        public string username { get; set; }
-        public string email { get; set; }
-        public string pwd { get; set; }
+        public string username { get; set; } = "";
+        public string email { get; set; } = "";
+        public string pwd { get; set; } = "";
     }
 
     public class MessageRes
     {
-        public string content { get; set; }
+        public string content { get; set; } = "";
         public DateTime pub_date { get; set; }
-        public string user { get; set; }
+        public string user { get; set; } = "";
     }
 
     public class CreateMessage
     {
-        public string content { get; set;}
+        public string content { get; set; } = "";
     }
 
     public class FollowsRes
     {
-        public List<string> follows { get; set; }
+        public List<string> follows { get; set; } = new List<string>();
     }
 
     public class FollowRequest
     {
         public string? follow { get; set; } = null;
         public string? unfollow { get; set; } = null;
+    }
+
+    public class LoginRequest
+    {
+        public string username { get; set; } = "";
+        public string pwd { get; set; } = "";
     }
 }

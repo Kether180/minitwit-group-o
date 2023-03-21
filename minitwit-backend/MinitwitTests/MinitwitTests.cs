@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
-using Minitwit7.Controllers;
-using Minitwit7.data;
+using Minitwit.Controllers;
+using Minitwit.data;
 
 public class MinitwitTests : IDisposable
 {

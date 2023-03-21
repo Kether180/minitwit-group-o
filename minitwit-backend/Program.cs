@@ -1,9 +1,5 @@
-﻿using Minitwit7.data;
+﻿using Minitwit.data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Npgsql.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +16,14 @@ builder.Services.AddDbContext<DataContext>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+}*/
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 using (var scope = app.Services.CreateScope())
 {

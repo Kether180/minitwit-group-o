@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Minitwit7.Models
+namespace Minitwit.Models
 {
 	public class Follower
 	{
