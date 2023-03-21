@@ -7,17 +7,17 @@ ARG TARGETOS
 RUN arch=$TARGETARCH \
     && if [ "$arch" = "amd64" ]; then arch="x64"; fi \
     && echo $TARGETOS-$arch > /tmp/rid
-    
+
 WORKDIR /App
 
 # Copy everything
 COPY *.csproj ./
 # Restore as distinct layers
 
-RUN dotnet restore
+RUN dotnet restore -r $(cat /tmp/rid)
 COPY . ./
 # Build and publish a release
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out -r $(cat /tmp/rid) --self-contained false --no-restore
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
@@ -26,4 +26,4 @@ COPY --from=build-env /App/out .
 
 EXPOSE 5050
 
-# ENTRYPOINT ["dotnet", "MiniTwit.dll"]
+ENTRYPOINT ["dotnet", "MiniTwit.dll"]
