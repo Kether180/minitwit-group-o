@@ -8,18 +8,15 @@ services:
      ports:
       - "5432:5432"
      volumes:
-       - dbdata:/var/lib/mysql
-       - ./_MySQL_Init_Script:/docker-entrypoint-initdb.d
+      # - ./database-data:/var/lib/postgresql/data # To run locally uncomment this
+      - /mnt/volumedb/data:/var/lib/postgresql/data # To run on server uncomment this
      restart: always
 
   api:
     image: itudevopsgroupo/minitwit-backend:runtime
     build:
-      context: ./minitwit-backend
+      context: ./minitwit-backend # Probably unnecessary here
     depends_on:
     - db
     ports:
     - "5050:5050"
-
-volumes:
-    dbdata:

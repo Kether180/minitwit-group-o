@@ -58,7 +58,7 @@ namespace Minitwit7.data
                     .HasColumnType("INTEGER");
 
                 b.Property<DateTime>("PubDate")
-                    .HasColumnType("Date");
+                    .HasColumnType("timestamp with time zone");
 
                 b.Property<string>("text")
                     .IsRequired()

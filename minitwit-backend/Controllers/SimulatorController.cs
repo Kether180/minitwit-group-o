@@ -219,7 +219,7 @@ namespace Minitwit7.Controllers
 
             await Task.CompletedTask;
 
-            return StatusCode(204, res);
+            return Ok(res);
         }
 
         [HttpPost]

@@ -38,7 +38,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogInformation("Waiting for database...");
         Thread.Sleep(1000);
     }
-    dbContext.Database.EnsureCreated();
+    dbContext.Database.Migrate();
 }
 
 
