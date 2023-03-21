@@ -99,6 +99,41 @@ namespace Minitwit7.Controllers
             return Ok(users);
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Route("/login")]
+        public async Task<ActionResult<string>> Login([FromBody] LoginRequest req)
+        {
+            if (req == null)
+                return Unauthorized(new Error("Unable to process login request", 401));
+
+            User? user = _context.Users.Where(u => u.Username == req.username).FirstOrDefault();
+
+            if (user == null)
+                return Unauthorized(new Error("Username does not match a user", 401));
+
+            string savedPasswordHash = user.PwHash;
+
+            byte[] hashBytes = Convert.FromBase64String(savedPasswordHash);
+
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, salt.Length);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(req.pwd, salt, 100000, HashAlgorithmName.SHA256);
+            byte[] hash = pbkdf2.GetBytes(20);
+
+            for (int i = 0; i < hash.Length; i++)
+            {
+                if (hashBytes[i + 16] != hash[i])
+                    return Unauthorized(new Error("Incorrect password or username", 401));
+            }
+
+            await Task.CompletedTask;
+
+            return Ok(user.Username);
+        }
+
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -347,5 +382,11 @@ namespace Minitwit7.Controllers
     {
         public string? follow { get; set; } = null;
         public string? unfollow { get; set; } = null;
+    }
+
+    public class LoginRequest
+    {
+        public string username { get; set; }
+        public string pwd { get; set; }
     }
 }
