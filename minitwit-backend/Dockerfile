@@ -17,7 +17,7 @@ COPY *.csproj ./
 RUN dotnet restore -r $(cat /tmp/rid)
 COPY . ./
 # Build and publish a release
-RUN dotnet publish -c Release -o out -r $(cat /tmp/rid) --self-contained false --no-restore
+RUN dotnet publish -c Release -o out /app -r $(cat /tmp/rid) --self-contained false --no-restore
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
