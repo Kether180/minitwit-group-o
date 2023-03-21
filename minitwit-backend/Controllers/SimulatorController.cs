@@ -120,10 +120,10 @@ namespace Minitwit7.Controllers
             byte[] salt = new byte[16];
             Array.Copy(hashBytes, 0, salt, 0, salt.Length);
 
-            var pbkdf2 = new Rfc2898DeriveBytes(req.pwd, salt, 100000, HashAlgorithmName.SHA256);
+            var pbkdf2 = new Rfc2898DeriveBytes(req.pwd, salt, 10000, HashAlgorithmName.SHA256);
             byte[] hash = pbkdf2.GetBytes(20);
 
-            for (int i = 0; i < hash.Length; i++)
+            for (int i = 0; i < 20; i++)
             {
                 if (hashBytes[i + 16] != hash[i])
                     return Unauthorized(new Error("Incorrect password or username", 401));
