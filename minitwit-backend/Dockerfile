@@ -1,12 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0-bullseye-slim-amd64  AS build-env
-
-
-ARG TARGETARCH
-ARG TARGETOS
-
-RUN arch=$TARGETARCH \
-    && if [ "$arch" = "amd64" ]; then arch="x64"; fi \
-    && echo $TARGETOS-$arch > /tmp/rid
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 
 WORKDIR /App
 
@@ -14,10 +6,10 @@ WORKDIR /App
 COPY *.csproj ./
 # Restore as distinct layers
 
-RUN dotnet restore -r $(cat /tmp/rid)
+RUN dotnet restore 
 COPY . ./
 # Build and publish a release
-RUN dotnet publish -c Release -o out /app -r $(cat /tmp/rid) --self-contained false --no-restore
+RUN dotnet publish -c Release -o out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
