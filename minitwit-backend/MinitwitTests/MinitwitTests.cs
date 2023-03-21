@@ -87,21 +87,26 @@ public class MinitwitTests : IDisposable
     }
 
     [Theory]
-    [InlineData(null, null)]
-    [InlineData("TestUser1337","user1337")]
-    [InlineData("TestUser3","user1")]
-    public async Task test_login_unsuccessful(String username, String password){
+    [InlineData("TestUser1337","user1337", "Username does not match a user")]
+    [InlineData("TestUser3","user1", "Incorrect password or username")]
+    public async Task test_login_unsuccessful(String username, String password, String errMsg){
         // Arrange
         var loginReq = new LoginRequest {
             username = username,
             pwd = password
         };
 
+        var error = new Error ( errMsg , 401);
+
         // Act
-        var result = await simCon.Login(loginReq);
+        var response = await simCon.Login(loginReq);
+        Assert.IsType<UnauthorizedObjectResult>(response.Result);
+        var result = (UnauthorizedObjectResult)response.Result;
+        Assert.IsType<Error>(result.Value);
+        var resultError = (Error) (result.Value);
 
         // Assert
-        Assert.IsType<UnauthorizedObjectResult>(result.Result);
+        Assert.Equal(error.error_msg, resultError.error_msg);
     }
 
     [Fact]
