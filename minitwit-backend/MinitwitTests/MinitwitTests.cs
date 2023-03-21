@@ -83,7 +83,7 @@ public class MinitwitTests : IDisposable
         var result = await simCon.Login(loginReq);
 
         // Assert
-        Assert.IsType<NoContentResult>(result.Result);
+        Assert.IsType<OkObjectResult>(result.Result);
     }
 
     [Theory]
