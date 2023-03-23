@@ -349,3 +349,55 @@ namespace Minitwit7.Controllers
         public string? unfollow { get; set; } = null;
     }
 }
+
+/* // refactor to c# 
+
+
+from prometheus_client import Counter, Gauge, Histogram
+from prometheus_client import generate_latest
+
+
+CPU_GAUGE = Gauge(
+    "minitwit_cpu_load_percent", "Current load of the CPU in percent."
+)
+REPONSE_COUNTER = Counter(
+    "minitwit_http_responses_total", "The count of HTTP responses sent."
+)
+REQ_DURATION_SUMMARY = Histogram(
+    "minitwit_request_duration_milliseconds", "Request duration distribution."
+)
+
+# Add /metrics route for Prometheus to scrape
+@app.route("/metrics/")
+def metrics():
+    return Response(
+        generate_latest(), mimetype="text/plain; version=0.0.4; charset=utf-8"
+    )
+
+
+@app.before_request
+def before_request():
+    """Make sure we are connected to the database each request and look
+    up the current user so that we know he's there.
+    """
+    request.start_time = datetime.now()
+    g.db = connect_db()
+    g.user = None
+    if "user_id" in session:
+        g.user = query_db(
+            "select * from user where user_id = ?",
+            [session["user_id"]],
+            one=True,
+        )
+    CPU_GAUGE.set(psutil.cpu_percent())
+
+@app.after_request
+def after_request(response):
+    """Closes the database again at the end of the request."""
+    g.db.close()
+    REPONSE_COUNTER.inc()
+    t_elapsed_ms = (datetime.now() - request.start_time).total_seconds() * 1000
+    REQ_DURATION_SUMMARY.observe(t_elapsed_ms)
+    return response
+
+    */

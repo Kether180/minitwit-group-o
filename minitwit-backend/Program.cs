@@ -5,7 +5,12 @@ using Npgsql.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using System;
 
+using Prometheus;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -24,7 +29,29 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseExceptionHandler("/Error");
 }
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
+
+// Capture metrics about all received HTTP requests.
+app.UseHttpMetrics();
+
+app.UseAuthorization();
+
+
+app.UseEndpoints(endpoints =>
+{
+    // Enable the /metrics page to export Prometheus metrics.
+    // Open http://localhost:5099/metrics to see the metrics.
+   
+  
+    endpoints.MapMetrics();
+});
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -39,10 +66,10 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-//app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+
