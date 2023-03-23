@@ -8,6 +8,7 @@ using Minitwit7.data;
 using Minitwit7.Models;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
 
 namespace Minitwit7.Controllers
 {
@@ -15,6 +16,12 @@ namespace Minitwit7.Controllers
     public class SimulatorController : ControllerBase
     {
         private readonly DataContext _context;
+
+
+        private static readonly Gauge LatestGauge = Metrics.CreateGauge("minitwit_latest", "Latest value processed");
+        private static readonly Counter RegistrationCounter = Metrics.CreateCounter("minitwit_registration_count", "Number of user registrations");
+        private static readonly Histogram RegistrationLatencyHistogram = Metrics.CreateHistogram("minitwit_registration_latency", "Registration request latency");
+
 
         public SimulatorController(DataContext context) // Connect directly to the database 
         {
@@ -218,7 +225,8 @@ namespace Minitwit7.Controllers
                     FollowsId = req_userId
                 });
             }
-            else if (folReq.unfollow != null && folReq.follow == null) {
+            else if (folReq.unfollow != null && folReq.follow == null)
+            {
                 int req_userId = Helpers.GetUserIdByUsername(_context, folReq.unfollow);
                 if (req_userId == -1)
                     return BadRequest(new Error("The user to follow was not found"));
@@ -268,7 +276,12 @@ namespace Minitwit7.Controllers
 
             await Task.CompletedTask;
 
-            return Ok(new FollowsRes() { follows=followingRes});
+            return Ok(new FollowsRes() { follows = followingRes });
+        }
+
+        internal static void HttpClientName(IServiceProvider arg1, HttpClient arg2)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -299,7 +312,7 @@ namespace Minitwit7.Controllers
             if (u != null)
                 return u.UserId;
             return -1;
-            
+
         }
     }
 
@@ -335,7 +348,7 @@ namespace Minitwit7.Controllers
 
     public class CreateMessage
     {
-        public string content { get; set;}
+        public string content { get; set; }
     }
 
     public class FollowsRes
@@ -349,55 +362,3 @@ namespace Minitwit7.Controllers
         public string? unfollow { get; set; } = null;
     }
 }
-
-/* // refactor to c# 
-
-
-from prometheus_client import Counter, Gauge, Histogram
-from prometheus_client import generate_latest
-
-
-CPU_GAUGE = Gauge(
-    "minitwit_cpu_load_percent", "Current load of the CPU in percent."
-)
-REPONSE_COUNTER = Counter(
-    "minitwit_http_responses_total", "The count of HTTP responses sent."
-)
-REQ_DURATION_SUMMARY = Histogram(
-    "minitwit_request_duration_milliseconds", "Request duration distribution."
-)
-
-# Add /metrics route for Prometheus to scrape
-@app.route("/metrics/")
-def metrics():
-    return Response(
-        generate_latest(), mimetype="text/plain; version=0.0.4; charset=utf-8"
-    )
-
-
-@app.before_request
-def before_request():
-    """Make sure we are connected to the database each request and look
-    up the current user so that we know he's there.
-    """
-    request.start_time = datetime.now()
-    g.db = connect_db()
-    g.user = None
-    if "user_id" in session:
-        g.user = query_db(
-            "select * from user where user_id = ?",
-            [session["user_id"]],
-            one=True,
-        )
-    CPU_GAUGE.set(psutil.cpu_percent())
-
-@app.after_request
-def after_request(response):
-    """Closes the database again at the end of the request."""
-    g.db.close()
-    REPONSE_COUNTER.inc()
-    t_elapsed_ms = (datetime.now() - request.start_time).total_seconds() * 1000
-    REQ_DURATION_SUMMARY.observe(t_elapsed_ms)
-    return response
-
-    */

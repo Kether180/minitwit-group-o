@@ -5,6 +5,8 @@ using Npgsql.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using System;
 
+
+
 using Prometheus;
 
 
@@ -22,6 +24,11 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+// // Add Prometheus middleware.
+// builder.Services.AddMetricServer(); Still trying to find a better way to do this.
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,8 +44,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
+// Use Prometheus middleware.
 // Capture metrics about all received HTTP requests.
+
 app.UseHttpMetrics();
+app.UseMetricServer();
 
 app.UseAuthorization();
 
@@ -46,9 +56,10 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     // Enable the /metrics page to export Prometheus metrics.
-    // Open http://localhost:5099/metrics to see the metrics.
-   
-  
+    //http://localhost:9090/
+    //Open http://localhost:9090/metrics to see the metrics.
+
+
     endpoints.MapMetrics();
 });
 
