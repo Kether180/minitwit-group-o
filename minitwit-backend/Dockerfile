@@ -6,7 +6,7 @@ WORKDIR /App
 COPY *.csproj ./
 # Restore as distinct layers
 
-RUN dotnet restore MiniTwit.sln
+RUN dotnet restore minitwit-backend/MiniTwit.sln
 COPY . ./
 # Build and publish a release
 RUN dotnet publish -c Release -o out
