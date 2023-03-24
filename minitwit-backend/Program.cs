@@ -24,10 +24,6 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-// // Add Prometheus middleware.
-// builder.Services.AddMetricServer(); Still trying to find a better way to do this.
-
-
 
 var app = builder.Build();
 
@@ -38,9 +34,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseExceptionHandler("/Error");
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseStaticFiles();
-
 app.UseRouting();
 
 

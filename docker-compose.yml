@@ -16,7 +16,6 @@ services:
      - grafana
      - prometheus
 
-
   api:
     image: itudevopsgroupo/minitwit-backend:runtime
     build:
@@ -27,8 +26,6 @@ services:
     - prometheus
     ports:
     - "5050:5050"
-
-    
 
   prometheus:
     image: prom/prometheus
