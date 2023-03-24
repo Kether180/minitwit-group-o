@@ -16,7 +16,7 @@ namespace Minitwit7.Controllers
     {
         private readonly DataContext _context;
 
-        public SimulatorController(DataContext context) // Connect directly to the database 
+        public SimulatorController(DataContext context) // Connect directly to the database
         {
             _context = context;
         }
@@ -256,7 +256,7 @@ namespace Minitwit7.Controllers
             else if (folReq.unfollow != null && folReq.follow == null) {
                 int req_userId = Helpers.GetUserIdByUsername(_context, folReq.unfollow);
                 if (req_userId == -1)
-                    return BadRequest(new Error("The user to follow was not found"));
+                    return BadRequest(new Error("The user to unfollow was not found"));
 
                 Follower? followerEntity = _context.Followers.Where(x => x.UserId == userId && x.FollowsId == req_userId).FirstOrDefault();
 
@@ -334,7 +334,7 @@ namespace Minitwit7.Controllers
             if (u != null)
                 return u.UserId;
             return -1;
-            
+
         }
     }
 
