@@ -23,7 +23,7 @@ namespace Minitwit7.Controllers
         private static readonly Histogram RegistrationLatencyHistogram = Metrics.CreateHistogram("minitwit_registration_latency", "Registration request latency");
 
 
-        public SimulatorController(DataContext context) // Connect directly to the database 
+        public SimulatorController(DataContext context) // Connect directly to the database
         {
             _context = context;
         }
@@ -104,6 +104,41 @@ namespace Minitwit7.Controllers
             await Task.CompletedTask;
 
             return Ok(users);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Route("/login")]
+        public async Task<ActionResult<string>> Login([FromBody] LoginRequest req)
+        {
+            if (req == null)
+                return Unauthorized(new Error("Unable to process login request", 401));
+
+            User? user = _context.Users.Where(u => u.Username == req.username).FirstOrDefault();
+
+            if (user == null)
+                return Unauthorized(new Error("Username does not match a user", 401));
+
+            string savedPasswordHash = user.PwHash;
+
+            byte[] hashBytes = Convert.FromBase64String(savedPasswordHash);
+
+            byte[] salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, salt.Length);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(req.pwd, salt, 10000, HashAlgorithmName.SHA256);
+            byte[] hash = pbkdf2.GetBytes(20);
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (hashBytes[i + 16] != hash[i])
+                    return Unauthorized(new Error("Incorrect password or username", 401));
+            }
+
+            await Task.CompletedTask;
+
+            return Ok(user.Username);
         }
 
 
@@ -191,7 +226,7 @@ namespace Minitwit7.Controllers
 
             await Task.CompletedTask;
 
-            return StatusCode(204, res);
+            return Ok(res);
         }
 
         [HttpPost]
@@ -229,7 +264,7 @@ namespace Minitwit7.Controllers
             {
                 int req_userId = Helpers.GetUserIdByUsername(_context, folReq.unfollow);
                 if (req_userId == -1)
-                    return BadRequest(new Error("The user to follow was not found"));
+                    return BadRequest(new Error("The user to unfollow was not found"));
 
                 Follower? followerEntity = _context.Followers.Where(x => x.UserId == userId && x.FollowsId == req_userId).FirstOrDefault();
 
@@ -355,6 +390,13 @@ namespace Minitwit7.Controllers
             public string? follow { get; set; } = null;
             public string? unfollow { get; set; } = null;
         }
+
+    public class LoginRequest
+    {
+        public string username { get; set; }
+        public string pwd { get; set; }
     }
+    }
+
 
 }

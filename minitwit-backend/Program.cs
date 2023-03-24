@@ -61,6 +61,9 @@ app.UseEndpoints(endpoints =>
 });
 
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<DataContext>>();
@@ -70,7 +73,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogInformation("Waiting for database...");
         Thread.Sleep(1000);
     }
-    dbContext.Database.EnsureCreated();
+    dbContext.Database.Migrate();
 }
 
 

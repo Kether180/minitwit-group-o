@@ -1,0 +1,22 @@
+version: '3.0'
+services:
+  db: 
+     image: postgres:14.1-alpine
+     environment:
+       POSTGRES_USER: dbuser
+       POSTGRES_PASSWORD: dbuserpassword
+     ports:
+      - "5432:5432"
+     volumes:
+      # - ./database-data:/var/lib/postgresql/data # To run locally uncomment this
+      - /mnt/volumedb/data:/var/lib/postgresql/data # To run on server uncomment this
+     restart: always
+
+  api:
+    image: itudevopsgroupo/minitwit-backend:runtime
+    build:
+      context: ./minitwit-backend # Probably unnecessary here
+    depends_on:
+    - db
+    ports:
+    - "5050:5050"
