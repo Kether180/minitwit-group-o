@@ -1,6 +1,6 @@
 version: '3.0'
 services:
-  db: 
+  db:
      image: postgres:14.1-alpine
      environment:
        POSTGRES_USER: dbuser
@@ -12,7 +12,7 @@ services:
       # - /mnt/volumedb/data:/var/lib/postgresql/data # To run on server uncomment this
      restart: always
 
-     depends_on: 
+     depends_on:
      - grafana
      - prometheus
 
@@ -34,15 +34,11 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-  
 
   grafana:
     image: grafana/grafana:4.5.2
     ports:
-      - "3000:3000"  
- 
+      - "3000:3000"
 
 volumes:
     dbdata:
-
-
