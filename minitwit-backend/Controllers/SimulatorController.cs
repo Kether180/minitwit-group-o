@@ -279,86 +279,82 @@ namespace Minitwit7.Controllers
             return Ok(new FollowsRes() { follows = followingRes });
         }
 
-        internal static void HttpClientName(IServiceProvider arg1, HttpClient arg2)
+        public static class Helpers
         {
-            throw new NotImplementedException();
-        }
-    }
+            private static int LATEST = 0;
 
-    public static class Helpers
-    {
-        private static int LATEST = 0;
-
-        public static int GetLatest()
-        {
-            return LATEST;
-        }
-
-        public static void UpdateLatest(int latest)
-        {
-            if (latest != -1)
+            public static int GetLatest()
             {
-                LATEST = latest;
+                return LATEST;
             }
-            else
+
+            public static void UpdateLatest(int latest)
             {
-                LATEST = 0;
+                if (latest != -1)
+                {
+                    LATEST = latest;
+                }
+                else
+                {
+                    LATEST = 0;
+                }
+            }
+
+            public static int GetUserIdByUsername(DataContext _context, string username)
+            {
+                User? u = _context.Users.Where(u => u.Username == username).FirstOrDefault();
+                if (u != null)
+                    return u.UserId;
+                return -1;
+
             }
         }
 
-        public static int GetUserIdByUsername(DataContext _context, string username)
+        public class Error
         {
-            User? u = _context.Users.Where(u => u.Username == username).FirstOrDefault();
-            if (u != null)
-                return u.UserId;
-            return -1;
+            public int status { get; set; }
+            public string error_msg { get; set; }
+            public Error(string _error_msg, int _status = 400)
+            {
+                error_msg = _error_msg;
+                status = _status;
+            }
+        }
 
+        public class LatestRes
+        {
+            public int latest { get; set; }
+        }
+
+        public class CreateUser
+        {
+            public string username { get; set; }
+            public string email { get; set; }
+            public string pwd { get; set; }
+        }
+
+        public class MessageRes
+        {
+            public string content { get; set; }
+            public DateTime pub_date { get; set; }
+            public string user { get; set; }
+        }
+
+        public class CreateMessage
+        {
+            public string content { get; set; }
+        }
+
+        public class FollowsRes
+        {
+            public List<string> follows { get; set; }
+        }
+
+        public class FollowRequest
+        {
+            public string? follow { get; set; } = null;
+            public string? unfollow { get; set; } = null;
         }
     }
 
-    public class Error
-    {
-        public int status { get; set; }
-        public string error_msg { get; set; }
-        public Error(string _error_msg, int _status = 400)
-        {
-            error_msg = _error_msg;
-            status = _status;
-        }
-    }
-
-    public class LatestRes
-    {
-        public int latest { get; set; }
-    }
-
-    public class CreateUser
-    {
-        public string username { get; set; }
-        public string email { get; set; }
-        public string pwd { get; set; }
-    }
-
-    public class MessageRes
-    {
-        public string content { get; set; }
-        public DateTime pub_date { get; set; }
-        public string user { get; set; }
-    }
-
-    public class CreateMessage
-    {
-        public string content { get; set; }
-    }
-
-    public class FollowsRes
-    {
-        public List<string> follows { get; set; }
-    }
-
-    public class FollowRequest
-    {
-        public string? follow { get; set; } = null;
-        public string? unfollow { get; set; } = null;
-    }
 }
