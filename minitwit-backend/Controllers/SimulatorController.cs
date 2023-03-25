@@ -16,12 +16,9 @@ namespace Minitwit7.Controllers
     public class SimulatorController : ControllerBase
     {
         private readonly DataContext _context;
-
-
         private static readonly Gauge LatestGauge = Metrics.CreateGauge("minitwit_latest", "Latest value processed");
         private static readonly Counter RegistrationCounter = Metrics.CreateCounter("minitwit_registration_count", "Number of user registrations");
         private static readonly Histogram RegistrationLatencyHistogram = Metrics.CreateHistogram("minitwit_registration_latency", "Registration request latency");
-
 
         public SimulatorController(DataContext context) // Connect directly to the database
         {
@@ -36,7 +33,6 @@ namespace Minitwit7.Controllers
             res.latest = Helpers.GetLatest();
             return Ok(res);
         }
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -141,7 +137,6 @@ namespace Minitwit7.Controllers
             return Ok(user.Username);
         }
 
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("/msgs")]
@@ -167,7 +162,6 @@ namespace Minitwit7.Controllers
 
             return Ok(res);
         }
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -195,8 +189,6 @@ namespace Minitwit7.Controllers
 
             return NoContent();
         }
-
-
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -313,90 +305,88 @@ namespace Minitwit7.Controllers
 
             return Ok(new FollowsRes() { follows = followingRes });
         }
+    }
 
-        public static class Helpers
+    public static class Helpers
+    {
+        private static int LATEST = 0;
+
+        public static int GetLatest()
         {
-            private static int LATEST = 0;
+            return LATEST;
+        }
 
-            public static int GetLatest()
+        public static void UpdateLatest(int latest)
+        {
+            if (latest != -1)
             {
-                return LATEST;
+                LATEST = latest;
             }
-
-            public static void UpdateLatest(int latest)
+            else
             {
-                if (latest != -1)
-                {
-                    LATEST = latest;
-                }
-                else
-                {
-                    LATEST = 0;
-                }
-            }
-
-            public static int GetUserIdByUsername(DataContext _context, string username)
-            {
-                User? u = _context.Users.Where(u => u.Username == username).FirstOrDefault();
-                if (u != null)
-                    return u.UserId;
-                return -1;
-
+                LATEST = 0;
             }
         }
 
-        public class Error
+        public static int GetUserIdByUsername(DataContext _context, string username)
         {
-            public int status { get; set; }
-            public string error_msg { get; set; }
-            public Error(string _error_msg, int _status = 400)
-            {
-                error_msg = _error_msg;
-                status = _status;
-            }
-        }
+            User? u = _context.Users.Where(u => u.Username == username).FirstOrDefault();
+            if (u != null)
+                return u.UserId;
+            return -1;
 
-        public class LatestRes
-        {
-            public int latest { get; set; }
         }
+    }
 
-        public class CreateUser
+    public class Error
+    {
+        public int status { get; set; }
+        public string error_msg { get; set; }
+        public Error(string _error_msg, int _status = 400)
         {
-            public string username { get; set; }
-            public string email { get; set; }
-            public string pwd { get; set; }
+            error_msg = _error_msg;
+            status = _status;
         }
+    }
 
-        public class MessageRes
-        {
-            public string content { get; set; }
-            public DateTime pub_date { get; set; }
-            public string user { get; set; }
-        }
+    public class LatestRes
+    {
+        public int latest { get; set; }
+    }
 
-        public class CreateMessage
-        {
-            public string content { get; set; }
-        }
+    public class CreateUser
+    {
+        public string username { get; set; }
+        public string email { get; set; }
+        public string pwd { get; set; }
+    }
 
-        public class FollowsRes
-        {
-            public List<string> follows { get; set; }
-        }
+    public class MessageRes
+    {
+        public string content { get; set; }
+        public DateTime pub_date { get; set; }
+        public string user { get; set; }
+    }
 
-        public class FollowRequest
-        {
-            public string? follow { get; set; } = null;
-            public string? unfollow { get; set; } = null;
-        }
+    public class CreateMessage
+    {
+        public string content { get; set; }
+    }
+
+    public class FollowsRes
+    {
+        public List<string> follows { get; set; }
+    }
+
+    public class FollowRequest
+    {
+        public string? follow { get; set; } = null;
+        public string? unfollow { get; set; } = null;
+    }
 
     public class LoginRequest
     {
         public string username { get; set; }
         public string pwd { get; set; }
     }
-    }
-
-
 }
