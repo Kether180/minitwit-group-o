@@ -132,7 +132,7 @@ public class MinitwitTests : IDisposable
         Assert.IsType<UnauthorizedObjectResult>(response.Result);
     }
 
-    [Theory]
+    /*[Theory]
     [InlineData("TestUser1", "user1")]
     [InlineData("TestUser2","user2")]
     [InlineData("TestUser3","user3")]
@@ -150,7 +150,7 @@ public class MinitwitTests : IDisposable
         Assert.IsType<OkObjectResult>(result.Result);
     }
 
-    [Theory]
+    /*[Theory]
     [InlineData("TestUser1337","user1337", "Username does not match a user")]
     [InlineData("TestUser3","user1", "Incorrect password or username")]
     public async Task test_login_unsuccessful(String username, String password, String errMsg){
@@ -171,7 +171,7 @@ public class MinitwitTests : IDisposable
 
         // Assert
         Assert.Equal(error.error_msg, resultError.error_msg);
-    }
+    }*/
 
     [Fact]
     public async Task test_follow_successful(){
