@@ -13,38 +13,38 @@ function Timeline(){
         setFollowsMap(new Map(followsMap.set(k,v)));
     }
     const {loggedUser, login, logout} = useContext(UserContext);
-    
+
     const url = `/api/fllws/${loggedUser}`
-    
+
 
     useEffect(() => {
 
       const fetchMsgs = async (f) => {
-        fetch("/api/msgs", {    
-            method: 'GET'     
+        fetch("/api/msgs", {
+            method: 'GET'
           }).then((response) => {
-            console.log(response); 
+            console.log(response);
             return response.json();
           })
-            .then((data) => {  
+            .then((data) => {
               const finalMsgs = data.map((msg) => {
                 const copy = {...msg};
                 const follow = f.find(follower => follower.name === copy.user);
-                
+
                 if(follow != null) {
                     console.log(follow);
                     copy.follow = follow.name;
                 }
-                return copy 
+                return copy
 
               });
-                
+
               setMsgs(finalMsgs);
-              
+
             })
             .catch((error) => console.log(error));
           }
-       
+
           const fetchFollows = async () => {
             try {
               const response = await fetch(url, { method: 'GET' });
@@ -62,7 +62,7 @@ function Timeline(){
 
       fetchFollows()
         .then((f) => fetchMsgs(f))
-        .catch(error => console.error('Failed to fetch follows')); 
+        .catch(error => console.error('Failed to fetch follows'));
       }, []);
 
     const handleFollow = async (user) => {
@@ -71,9 +71,9 @@ function Timeline(){
       if (followsMap.get(user)) {
         body = {follow: null, unfollow: user };
       }
-      
+
       var url = `/api/fllws/${loggedUser}`
-      const response = await fetch(url , 
+      const response = await fetch(url ,
       {
             headers: {
                 'Accept': 'application/json',
@@ -91,10 +91,10 @@ function Timeline(){
 
     }
 
-    
+
 
     return (
-      <>   
+      <>
       <div className="containerBox">
       <div className="centered">
         <h1 className="timeline-header">{loggedUser}</h1>
