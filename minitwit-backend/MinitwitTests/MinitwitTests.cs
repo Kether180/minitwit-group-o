@@ -132,6 +132,51 @@ public class MinitwitTests : IDisposable
         Assert.IsType<UnauthorizedObjectResult>(response.Result);
     }
 
+    //[Theory]
+    //[InlineData("TestUser1", "user1")]
+    //[InlineData("TestUser2","user2")]
+    //[InlineData("TestUser3","user3")]
+    //public async Task test_login_successful(String username, String password)
+    //{
+    //    Arrange
+    //   var loginReq = new LoginRequest
+    //   {
+    //       username = username,
+    //       pwd = password
+    //   };
+
+    //    Act
+    //   var result = await simCon.Login(loginReq);
+
+    //    Assert
+    //    Assert.IsType<OkObjectResult>(result.Result);
+    //}
+
+    //[Theory]
+    //[InlineData("TestUser1337", "user1337", "Username does not match a user")]
+    //[InlineData("TestUser3", "user1", "Incorrect password or username")]
+    //public async Task test_login_unsuccessful2(String username, String password, String errMsg)
+    //{
+    //    Arrange
+    //   var loginReq = new LoginRequest
+    //   {
+    //       username = username,
+    //       pwd = password
+    //   };
+
+    //    var error = new Error(errMsg, 401);
+
+    //    Act
+    //   var response = await simCon.Login(loginReq);
+    //    Assert.IsType<UnauthorizedObjectResult>(response.Result);
+    //    var result = (UnauthorizedObjectResult)response.Result;
+    //    Assert.IsType<Error>(result.Value);
+    //    var resultError = (Error)(result.Value);
+
+    //    Assert
+    //    Assert.Equal(error.error_msg, resultError.error_msg);
+    //}
+
     [Fact]
     public async Task test_follow_successful(){
         // Arrange

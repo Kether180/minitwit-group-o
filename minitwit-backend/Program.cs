@@ -18,6 +18,14 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "cors", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "http://localhost");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -63,6 +71,11 @@ using (var scope = app.Services.CreateScope())
     }
     dbContext.Database.Migrate();
 }
+
+
+//app.UseHttpsRedirection();
+
+app.UseCors("cors");
 
 app.UseAuthorization();
 app.MapControllers();
