@@ -14,8 +14,8 @@ services:
 
   api:
     image: itudevopsgroupo/minitwit-backend:runtime
-    build:
-      context: /minitwit-backend # Probably unnecessary here
+    build: ./minitwit-backend
+      #context: ./minitwit-backend # Probably unnecessary here
     depends_on:
     - db
     ports:
