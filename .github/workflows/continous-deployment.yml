@@ -84,7 +84,7 @@ jobs:
 
       - name: Create minitwit directory
         run: |
-          mkdir -p ~/minitwit/
+          mkdir ~/minitwit/
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
