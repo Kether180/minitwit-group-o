@@ -84,12 +84,9 @@ jobs:
 
       - name: Copy remote_files directory to server
         run: >
-          ssh $SSH_USER@$SSH_HOST
-          -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no
           mkdir -p ~/minitwit/
-          exit
-          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no deploy.sh $SSH_USER@$SSH_HOST:~/minitwit
-          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no docker-compose.yml $SSH_USER@$SSH_HOST:~/minitwit
+          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/deploy.sh $SSH_USER@$SSH_HOST:~/minitwit
+          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/docker-compose.yml $SSH_USER@$SSH_HOST:~/minitwit
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
