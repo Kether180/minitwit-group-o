@@ -84,7 +84,8 @@ jobs:
 
       - name: Copy remote_files directory to server
         run: >
-          scp -pr ./remote_files $SSH_USER@$SSH_HOST:~/minitwit -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no
+          scp -pr ./remote_files $SSH_USER@$SSH_HOST:~/minitwit 
+          -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
