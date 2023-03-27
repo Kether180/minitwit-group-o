@@ -82,9 +82,15 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
 
-      - name: Copy remote_files directory to server
+      - name: Create minitwit directory
         run: |
           mkdir -p ~/minitwit/
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Copy remote_files directory to server
+        run: |
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/deploy.sh $SSH_USER@$SSH_HOST:~/minitwit
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/docker-compose.yml $SSH_USER@$SSH_HOST:~/minitwit
         env:
