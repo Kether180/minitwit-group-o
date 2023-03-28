@@ -19,4 +19,4 @@ services:
     depends_on:
     - db
     ports:
-    - 5432 #"5050:5050"
+    - "5050:5050"
