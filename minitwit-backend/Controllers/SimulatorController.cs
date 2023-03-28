@@ -8,6 +8,7 @@ using Minitwit7.data;
 using Minitwit7.Models;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
 
 namespace Minitwit7.Controllers
 {
@@ -15,6 +16,9 @@ namespace Minitwit7.Controllers
     public class SimulatorController : ControllerBase
     {
         private readonly DataContext _context;
+        private static readonly Gauge LatestGauge = Metrics.CreateGauge("minitwit_latest", "Latest value processed");
+        private static readonly Counter RegistrationCounter = Metrics.CreateCounter("minitwit_registration_count", "Number of user registrations");
+        private static readonly Histogram RegistrationLatencyHistogram = Metrics.CreateHistogram("minitwit_registration_latency", "Registration request latency");
 
         public SimulatorController(DataContext context) // Connect directly to the database
         {
@@ -29,7 +33,6 @@ namespace Minitwit7.Controllers
             res.latest = Helpers.GetLatest();
             return Ok(res);
         }
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -134,7 +137,6 @@ namespace Minitwit7.Controllers
             return Ok(user.Username);
         }
 
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Route("/msgs")]
@@ -160,7 +162,6 @@ namespace Minitwit7.Controllers
 
             return Ok(res);
         }
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -188,8 +189,6 @@ namespace Minitwit7.Controllers
 
             return NoContent();
         }
-
-
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -253,7 +252,8 @@ namespace Minitwit7.Controllers
                     FollowsId = req_userId
                 });
             }
-            else if (folReq.unfollow != null && folReq.follow == null) {
+            else if (folReq.unfollow != null && folReq.follow == null)
+            {
                 int req_userId = Helpers.GetUserIdByUsername(_context, folReq.unfollow);
                 if (req_userId == -1)
                     return BadRequest(new Error("The user to unfollow was not found"));
@@ -303,7 +303,7 @@ namespace Minitwit7.Controllers
 
             await Task.CompletedTask;
 
-            return Ok(new FollowsRes() { follows=followingRes});
+            return Ok(new FollowsRes() { follows = followingRes });
         }
     }
 
@@ -370,7 +370,7 @@ namespace Minitwit7.Controllers
 
     public class CreateMessage
     {
-        public string content { get; set;}
+        public string content { get; set; }
     }
 
     public class FollowsRes
