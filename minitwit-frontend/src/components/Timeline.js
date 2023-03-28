@@ -6,7 +6,7 @@ function Timeline(){
     const [msgs, setMsgs] = useState([]);
 
     useEffect(() => {
-        fetch("http://157.230.79.99:5050/msgs", {    
+        fetch("/api/msgs", {    
             method: 'GET'     
           }).then((response) => {
             console.log(response); 
