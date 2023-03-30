@@ -20,9 +20,6 @@ The project includes various user-specific features such as login/logout, regist
 ## Subtasks
 The subtasks involved in this project include setting up the database, setting up Digital Ocean, setting up CI/CD GitActions, and setting up Grafana/Prometheus.
 
-## Frontend UI
-The project utilizes UI tools such as the React.js framework and JavaScript to create an interactive user interface.
-
 ## Metrics
 The project includes a metrics endpoint that can be accessed at http://157.230.79.99:5050/metrics.
 
