@@ -1,20 +1,33 @@
 version: '3.0'
 services:
-  db: 
-     image: postgres:14.1-alpine
-     environment:
-       POSTGRES_USER: dbuser
-       POSTGRES_PASSWORD: dbuserpassword
-     ports:
+  db:
+    image: postgres:14.1-alpine
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbuserpassword
+    ports:
       - "5432:5432"
-     volumes:
+    volumes:
       # - ./database-data:/var/lib/postgresql/data # To run locally uncomment this
       - /mnt/volumedb/data:/var/lib/postgresql/data # To run on server uncomment this
-     restart: always
+    restart: always
 
   api:
     image: itudevopsgroupo/minitwit-backend:runtime
     depends_on:
-    - db
+      - db
     ports:
-    - "5050:5050"
+      - "5050:5050"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:4.5.2
+    ports:
+      - "3000:3000"

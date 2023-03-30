@@ -99,3 +99,31 @@ jobs:
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
+
+
+
+  - name: Copy files for Monitoring
+        run: |
+          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no docker-compose.yml "$SSH_USER"@"$SSH_HOST":/minitwit
+          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no prometheus.yml "$SSH_USER"@"$SSH_HOST":/minitwit
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Deploy Monitoring
+        run: >
+          ssh "$SSH_USER"@"$SSH_HOST"
+          -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no
+          "docker compose -f docker/docker-compose.yml up -d"
+
+          env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Copy files for Logging and Deploy
+        run: |
+          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no docker-compose.yml "$SSH_USER"@"$SSH_HOST":/minitwit
+          ssh "$SSH_USER"@"$SSH_HOST" -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no "docker compose -f docker/docker-compose.yml up -d"
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
