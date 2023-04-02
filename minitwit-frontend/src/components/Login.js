@@ -70,6 +70,7 @@ function Login() {
                         If you do not have an account, then register here!
                     </p>
                     <button className="action-button form-item" onClick={goToRegister}>Register here</button>
+
                 </div>
             </div>
         </div>
