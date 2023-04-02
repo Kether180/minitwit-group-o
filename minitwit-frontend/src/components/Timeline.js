@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import '../style/timeline.css'
 
 function Timeline(){
 
@@ -20,11 +21,23 @@ function Timeline(){
       }, []);
 
     return (
-        <div>
-            {msgs.map((item) => (
-                <p>{item.content}</p>
-            ))}
+      <>
+      <br/>
+
+      <br/>      
+      <div className= 'container'>
+        <div className='centered'>
+          
+          <h1>Timeline</h1>
+          {msgs.map((item) => (
+            <div key={item.pub_date}>
+              <p>{item.user}</p>
+              <p>{item.content}</p>
+            </div>
+          ))}
         </div>
+      </div>
+      </>
     );
 }
 
