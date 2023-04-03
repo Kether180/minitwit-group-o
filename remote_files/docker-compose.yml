@@ -23,11 +23,16 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - /minitwit/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./remote_files/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
 
   grafana:
     image: grafana/grafana:4.5.2
+    volumes:
+      - /mnt/volumedb/grafana-datasources:/etc/grafana/provisioning/datasources # To run on server uncomment this
+    #  - ./local-volumes/grafana-datasources:/etc/grafana/provisioning/datasources # To run locally uncomment this
+      - /mnt/volumedb/grafana-data:/var/lib/grafana # To run on server uncomment this
+    #  - ./local-volumes/grafana-data:/var/lib/grafana # To run locally uncomment this
     ports:
       - "3000:3000"
