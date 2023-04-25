@@ -3,6 +3,24 @@
   justify-content: center;
 }
 
-.centered {
-    text-align: center;
+.post-box {
+  background-color: hsl(0, 70%, 75%);
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.post-box p {
+  margin: 0;
+}
+
+.post-user {
+  margin: 0; 
+  font-weight: bold; 
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: left;
 }
