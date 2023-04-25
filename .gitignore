@@ -12,3 +12,6 @@ MinitwitTests/bin/
 bin/
 obj/
 .vscode/
+
+local-volumes/
+data/
