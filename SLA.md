@@ -1,7 +1,7 @@
 # Service Level Agreement for MiniTwit API
 This document outlines SLA for our MiniTwit API.
 
-### 1. 24/7 Support
+### 1. Customer Support 24/7
 
 ### 2. Security Guaranteed
 
