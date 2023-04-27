@@ -29,6 +29,9 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+
         const response = await fetch("/api/login" , 
         {
             headers: {
