@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Minitwit7.Models;
-using Minitwit7.data;
+using Minitwit.Models;
+using Minitwit.data;
 
 
 

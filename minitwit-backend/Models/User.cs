@@ -1,4 +1,4 @@
-﻿namespace Minitwit7.Models
+﻿namespace Minitwit.Models
 {
     public class User
     {

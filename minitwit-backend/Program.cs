@@ -1,11 +1,10 @@
-﻿using Minitwit7.data;
+using Minitwit.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using System;
 using Prometheus;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +32,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
     app.UseExceptionHandler("/Error");
 }
 app.UseSwagger();
