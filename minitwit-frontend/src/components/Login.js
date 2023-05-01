@@ -14,7 +14,7 @@ function Login() {
     };
 
     const goToTimeline = () => {
-        let path = '/Timeline';
+        let path = '/';
         navigation(path);
     };
 

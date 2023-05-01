@@ -5,17 +5,20 @@ import './style/style.css';
 import Registration from './components/Registration';
 import Login from './components/Login.js';
 import Timeline from "./components/Timeline";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route path="/Register" element={<Registration />} />
-          <Route path="/Timeline" element={<Timeline />} />
-        </Routes>
-      </Router>
+       
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route exact path="/Login" element={<Login />} />
+            <Route path="/Register" element={<Registration />} />
+            <Route path="/" element={<Timeline />} />
+          </Routes>
+        </Router>
  
     </div>
   );
