@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using Minitwit.Controllers;
 using Minitwit.data;
+using Minitwit.Models;
 
 public class MinitwitTests : IDisposable
 {
