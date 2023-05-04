@@ -8,7 +8,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      # - ./database-data:/var/lib/postgresql/data # To run locally uncomment this
+      #- ./database-data:/var/lib/postgresql/data # To run locally uncomment this
       - /mnt/volumedb/data:/var/lib/postgresql/data # To run on server uncomment this
     restart: always
 
@@ -31,8 +31,40 @@ services:
     image: grafana/grafana:4.5.2
     volumes:
       - /mnt/volumedb/grafana-datasources:/etc/grafana/provisioning/datasources # To run on server uncomment this
-    #  - ./local-volumes/grafana-datasources:/etc/grafana/provisioning/datasources # To run locally uncomment this
+      #- ./local-volumes/grafana-datasources:/etc/grafana/provisioning/datasources # To run locally uncomment this
       - /mnt/volumedb/grafana-data:/var/lib/grafana # To run on server uncomment this
-    #  - ./local-volumes/grafana-data:/var/lib/grafana # To run locally uncomment this
+      #- ./local-volumes/grafana-data:/var/lib/grafana # To run locally uncomment this
     ports:
       - "3000:3000"
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.2.0"
+    ports:
+      - "9200:9200"
+    environment:
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "discovery.type=single-node"
+    volumes:
+      - elk_elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - elk
+    
+  kibana:
+    container_name: kibana
+    image: "docker.elastic.co/kibana/kibana:7.2.0"
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    environment:
+      elasticsearch.hosts: '["http://elasticsearch:9200"]'
+    networks:
+      - elk
+
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+  elk_elasticsearch_data:
