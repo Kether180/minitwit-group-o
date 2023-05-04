@@ -25,5 +25,5 @@ jobs:
         binary-path: 'minitwit-backend'
 
     - name: Infer# analysis results
-      run: echo "${{ steps.runinfersharp.outputs.results }}"
+      run: echo '${{ steps.runinfersharp.outputs.results }}'
       
