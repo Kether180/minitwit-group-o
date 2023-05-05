@@ -19,10 +19,11 @@ namespace Minitwit.Controllers
         private static readonly Gauge LatestGauge = Metrics.CreateGauge("minitwit_latest", "Latest value processed");
         private static readonly Counter RegistrationCounter = Metrics.CreateCounter("minitwit_registration_count", "Number of user registrations");
         private static readonly Histogram RegistrationLatencyHistogram = Metrics.CreateHistogram("minitwit_registration_latency", "Registration request latency");
-
-        public SimulatorController(DataContext context) // Connect directly to the database
+        private readonly ILogger<SimulatorController> _logger;
+        public SimulatorController(DataContext context, ILogger<SimulatorController> logger) // Connect directly to the database
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -56,6 +57,8 @@ namespace Minitwit.Controllers
         public async Task<ActionResult<List<User>>> RegisterUser([FromBody] CreateUser user, int latest = -1)
         {
             Helpers.UpdateLatest(latest);
+
+            _logger.LogInformation("Register User", DateTime.UtcNow);
 
             User newUser = new User();
 
@@ -124,11 +127,13 @@ namespace Minitwit.Controllers
         {
             if (req == null)
                 return Unauthorized(new Error("Unable to process login request", 401));
+                _logger.LogError("Unable to process request", DateTime.UtcNow);
 
             User? user = _context.Users.Where(u => u.Username == req.username).FirstOrDefault();
 
             if (user == null)
                 return Unauthorized(new Error("Username does not match a user", 401));
+                _logger.LogError("Username does not match a user", DateTime.UtcNow);
 
             string savedPasswordHash = user.PwHash;
 
