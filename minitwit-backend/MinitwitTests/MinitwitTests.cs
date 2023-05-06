@@ -5,6 +5,7 @@ using Xunit;
 using Minitwit.Controllers;
 using Minitwit.data;
 using Minitwit.Models;
+using Moq;
 
 public class MinitwitTests : IDisposable
 {
@@ -23,7 +24,7 @@ public class MinitwitTests : IDisposable
             // Delete existing db before creating a new one
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-
+            logger = Mock.Of<ILogger<SimulatorController>>();
             simCon = new SimulatorController(context, logger);
     }
 

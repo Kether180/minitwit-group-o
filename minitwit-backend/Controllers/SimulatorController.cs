@@ -32,7 +32,8 @@ namespace Minitwit.Controllers
         {
             int latest = Helpers.GetLatest();
             int userCount = _context.Users.Count();
-
+            _logger.LogInformation("Accessed localhost:5050", DateTime.UtcNow);
+            
             return new Status {
                 State = "Running",
                 LatestRequest = latest,
