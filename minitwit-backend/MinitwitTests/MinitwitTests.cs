@@ -11,6 +11,8 @@ public class MinitwitTests : IDisposable
     private readonly DataContext context;
     private readonly SimulatorController simCon;
 
+    private readonly ILogger<SimulatorController> logger;
+
     public MinitwitTests()
     {
         var builder = new DbContextOptionsBuilder<DataContext>();
@@ -22,7 +24,7 @@ public class MinitwitTests : IDisposable
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            simCon = new SimulatorController(context);
+            simCon = new SimulatorController(context, logger);
     }
 
     public void Dispose()
