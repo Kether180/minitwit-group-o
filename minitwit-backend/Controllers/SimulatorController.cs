@@ -104,7 +104,9 @@ namespace Minitwit.Controllers
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("Registration successful", DateTime.UtcNow);
             return NoContent();
+            
         }
 
         [HttpGet]
@@ -127,9 +129,7 @@ namespace Minitwit.Controllers
         {
             if (req == null){
                 _logger.LogError("Unable to process request", DateTime.UtcNow);
-
                 return Unauthorized(new Error("Unable to process login request", 401));
-
             }
 
             User? user = _context.Users.Where(u => u.Username == req.username).FirstOrDefault();
@@ -137,7 +137,6 @@ namespace Minitwit.Controllers
             if (user == null){
                 _logger.LogError("Username does not match a user", DateTime.UtcNow);
                 return Unauthorized(new Error("Username does not match a user", 401));
-
             }
 
             string savedPasswordHash = user.PwHash;
