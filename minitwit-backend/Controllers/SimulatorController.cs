@@ -125,15 +125,20 @@ namespace Minitwit.Controllers
         [Route("/login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginRequest req)
         {
-            if (req == null)
-                return Unauthorized(new Error("Unable to process login request", 401));
+            if (req == null){
                 _logger.LogError("Unable to process request", DateTime.UtcNow);
+
+                return Unauthorized(new Error("Unable to process login request", 401));
+
+            }
 
             User? user = _context.Users.Where(u => u.Username == req.username).FirstOrDefault();
 
-            if (user == null)
-                return Unauthorized(new Error("Username does not match a user", 401));
+            if (user == null){
                 _logger.LogError("Username does not match a user", DateTime.UtcNow);
+                return Unauthorized(new Error("Username does not match a user", 401));
+
+            }
 
             string savedPasswordHash = user.PwHash;
 
