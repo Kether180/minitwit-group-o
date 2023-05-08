@@ -9,16 +9,12 @@ database-data/
 
 MinitwitTests/obj/
 MinitwitTests/bin/
-<<<<<<< HEAD
 bin/
 obj/
 .vscode/
 
 local-volumes/
 data/
-=======
 
 #frontend
-
-minitwit-frontend/node_modules 
->>>>>>> a Dockerfile has been added
+minitwit-frontend/node_modules
