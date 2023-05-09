@@ -6,7 +6,9 @@ const reportWebVitals = onPerfEntry => {
       getFCP(onPerfEntry);
       getLCP(onPerfEntry);
       getTTFB(onPerfEntry);
-    });
+    })
+    .catch(error => console.log(error)
+    );
   }
 };
 

@@ -57,9 +57,9 @@ function Timeline(){
             }
           }
 
-      fetchFollows().then((f) => fetchMsgs(f));
-
-        
+      fetchFollows()
+        .then((f) => fetchMsgs(f))
+        .catch(error => console.error('Failed to fetch follows')); 
       }, []);
 
     const handleFollow = async (user) => {
