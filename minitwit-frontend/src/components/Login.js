@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../style/login.css'
+import  UserContext  from '../userContext';
 
 function Login() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const {loggedUser, login, logout} = useContext(UserContext);
    
     let navigation = useNavigate();
     const goToRegister = () => {
@@ -18,6 +20,8 @@ function Login() {
         navigation(path);
     };
 
+    //const toggleUser
+
     const handleUsernameChange= (event) => {
         setUsername(event.target.value);
     };  
@@ -28,9 +32,6 @@ function Login() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        localStorage.setItem('username', username);
-        localStorage.setItem('password', password);
 
         const response = await fetch("/api/login" , 
         {
@@ -44,6 +45,7 @@ function Login() {
 
         if (response.ok) {
             goToTimeline();
+            login(username);
         } else {
             // Login failed, display error message
             const errorData = await response.json();

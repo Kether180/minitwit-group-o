@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useEffect, useState } from 'react';
 import '../style/timeline.css'
+import  UserContext  from '../userContext';
 
 function Timeline(){
 
@@ -9,8 +10,8 @@ function Timeline(){
     const updateFollowsMap = (k,v) => {
         setFollowsMap(new Map(followsMap.set(k,v)));
     }
+    const {loggedUser, login, logout} = useContext(UserContext);
     
-    let loggedUser = localStorage.getItem('username');
     const url = `/api/fllws/${loggedUser}`
     
 
@@ -97,7 +98,7 @@ function Timeline(){
       <br/>      
       <div className="container">
       <div className="centered">
-        <h1 className="timeline-header">Timeline</h1>
+        <h1 className="timeline-header">{loggedUser}</h1>
         {msgs.map((item) => (
           <div key={item.pub_date} className="post-container">
             <div className="post-header">

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { UserContext, UserProvider } from "./userContext";
 
 import logo from './logo.svg';
 import './style/style.css';
@@ -12,12 +13,14 @@ function App() {
     <div className="App">
        
         <Router>
-          <Navbar />
-          <Routes>
-            <Route exact path="/Login" element={<Login />} />
-            <Route path="/Register" element={<Registration />} />
-            <Route path="/" element={<Timeline />} />
-          </Routes>
+          <UserProvider>
+            <Navbar />
+            <Routes>          
+                <Route exact path="/Login" element={<Login />} />
+                <Route path="/Register" element={<Registration />} />
+                <Route path="/" element={<Timeline />} />            
+            </Routes>
+          </UserProvider>
         </Router>
  
     </div>
