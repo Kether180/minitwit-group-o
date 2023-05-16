@@ -8,7 +8,6 @@ function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const {loggedUser, login, logout} = useContext(UserContext);
-
     let navigation = useNavigate();
     const goToRegister = () => {
         let path = '/Register';

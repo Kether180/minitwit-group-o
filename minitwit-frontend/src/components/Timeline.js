@@ -13,7 +13,6 @@ function Timeline(){
         setFollowsMap(new Map(followsMap.set(k,v)));
     }
     const {loggedUser, login, logout} = useContext(UserContext);
-
     const url = `/api/fllws/${loggedUser}`
 
 
