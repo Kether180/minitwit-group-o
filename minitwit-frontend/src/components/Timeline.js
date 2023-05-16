@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { useEffect, useState } from 'react';
 import '../style/timeline.css'
 import  UserContext  from '../userContext';
+import { CgProfile } from 'react-icons/cg';
+
 
 function Timeline(){
 
@@ -92,16 +94,14 @@ function Timeline(){
     
 
     return (
-      <>
-      <br/>
-
-      <br/>      
-      <div className="container">
+      <>   
+      <div className="containerBox">
       <div className="centered">
         <h1 className="timeline-header">{loggedUser}</h1>
         {msgs.map((item) => (
           <div key={item.pub_date} className="post-container">
             <div className="post-header">
+              <CgProfile className="icon" size={70}/>
               <p className="post-user">{item.user}</p>
               <div className="post-buttons">
                 <button className="follow-button" onClick={() => handleFollow(item.user)}>
