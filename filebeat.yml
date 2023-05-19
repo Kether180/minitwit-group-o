@@ -27,8 +27,8 @@ output.elasticsearch:
       when.or:
           - equals:
               container.image.name: itudevopsgroupo/minitwit-backend:runtime
-          - equals:
-              container.image.name: ${ELK_USER}/minitwitclient # need change to frontend image name
+          #- equals:
+             # container.image.name: ${ELK_USER}/minitwitclient # need change to frontend image name
     - index: "filebeat-ngix-%{[agent.version]}-%{+yyyy.MM.dd}"
       when.equals:
         container.image.name: nginx
