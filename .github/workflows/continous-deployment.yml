@@ -63,8 +63,8 @@ jobs:
       - name: Build and push frontend
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: minitwit-frontend/Dockerfile
+          context: ./minitwit-frontend
+          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/minitwit_frontend:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/minitwit_frontend:buildcache
