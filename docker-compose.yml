@@ -1,4 +1,12 @@
 version: '3.0'
+
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+  elk_elasticsearch_data:
+
 services:
   db:
      image: postgres:14.1-alpine
@@ -46,10 +54,7 @@ services:
       - "3000:3000"
 
   elasticsearch:
-    container_name: elasticsearch
     image: "docker.elastic.co/elasticsearch/elasticsearch:7.2.0"
-    ports:
-      - "9200:9200"
     environment:
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "discovery.type=single-node"
@@ -57,22 +62,39 @@ services:
       - elk_elasticsearch_data:/usr/share/elasticsearch/data
     networks:
       - elk
-    
+
   kibana:
-    container_name: kibana
     image: "docker.elastic.co/kibana/kibana:7.2.0"
-    ports:
-      - 5601:5601
     depends_on:
       - elasticsearch
     environment:
       - ELASTICSEARCH_URL=http://localhost:9200
     networks:
       - elk
-  
-networks:
-  elk:
-    driver: bridge
 
-volumes:
-  elk_elasticsearch_data:
+  filebeat:
+    image: "docker.elastic.co/beats/filebeat:7.2.0"
+    user: root
+    volumes:
+        - ${ELK_DIR}/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        - /var/lib/docker:/var/lib/docker:ro
+        - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+        - elk
+
+  nginx:
+    image: nginx
+    ports:
+      - 9200:9200
+      - 5601:5601
+      - 8881:8881
+      - 8882:8882
+    networks:
+      - elk
+    volumes:
+      - type: bind
+        source: ${ELK_DIR}/nginx.conf
+        target: /etc/nginx/nginx.conf
+      - type: bind
+        source: ${ELK_DIR}/.htpasswd
+        target: /etc/nginx/.htpasswd

@@ -11,18 +11,16 @@ import Navbar from "./components/Navbar";
 function App() {
   return (
     <div className="App">
-       
         <Router>
           <UserProvider>
             <Navbar />
-            <Routes>          
+            <Routes>
                 <Route exact path="/Login" element={<Login />} />
                 <Route path="/Register" element={<Registration />} />
-                <Route path="/" element={<Timeline />} />            
+                <Route path="/" element={<Timeline />} />
             </Routes>
           </UserProvider>
         </Router>
- 
     </div>
   );
 }

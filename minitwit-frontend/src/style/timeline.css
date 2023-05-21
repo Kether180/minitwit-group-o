@@ -5,12 +5,12 @@
   margin: 150px;
   border: 1px solid black;
   border-color: hsl(0, 0%, 0%);
-  border-radius: 5px; 
+  border-radius: 5px;
 }
 
 .post-box {
   background-color: hsl(0, 31%, 90%);
-  border-radius: 5px; 
+  border-radius: 5px;
   padding: 10px;
   margin-top: 10px;
   border-color: hsl(0, 0%, 0%);
@@ -23,9 +23,9 @@
 }
 
 .post-user {
-  margin-bottom: 1; 
+  margin-bottom: 1;
   margin-left: 10px;
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 .post-header {
@@ -35,6 +35,6 @@
 }
 
 .follow-button {
-  margin: 0px;  
+  margin: 0px;
   margin-left: 10px;
 }

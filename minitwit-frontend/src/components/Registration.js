@@ -31,10 +31,9 @@ function Registration(){
         .then(function(res) {console.log(res)})
         .catch(function(res) {console.log(res)});
     }
-    
 
     return(
-    <div className="container">        
+    <div className="container">
         <div className='wrapper'>
             <div className="back-button-container">
                 <button className="back-button action-button" onClick={goBack}>Back</button>
@@ -45,7 +44,6 @@ function Registration(){
                 <input type="text" placeholder='E-mail' className="input-field form-item js--email-register" />
                 <input type="password" placeholder='Password' className="input-field form-item js--password-register" />
                 <button className="action-button form-item" onClick={register}>Register</button>
-                
             </div>
         </div>
     </div>
