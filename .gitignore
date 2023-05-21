@@ -17,5 +17,4 @@ local-volumes/
 data/
 
 #frontend
-
 minitwit-frontend/node_modules
