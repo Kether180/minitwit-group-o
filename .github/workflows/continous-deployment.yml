@@ -89,11 +89,8 @@ jobs:
       - name: Copy remote_files directory to server
         run: |
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/deploy.sh $SSH_USER@$SSH_HOST:/minitwit
-          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/setup_elk.sh $SSH_USER@$SSH_HOST:/minitwit
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/docker-compose.yml $SSH_USER@$SSH_HOST:/minitwit
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/prometheus.yml "$SSH_USER"@"$SSH_HOST":/minitwit
-          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/nginx.conf $SSH_USER@$SSH_HOST:/minitwit
-          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/filebeat.yml $SSH_USER@$SSH_HOST:/minitwit
 
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
@@ -104,7 +101,7 @@ jobs:
         run: >
           ssh $SSH_USER@$SSH_HOST
           -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no
-          'cd /minitwit; /minitwit/setup_elk.sh && /minitwit/deploy.sh'
+          'cd /minitwit; /minitwit/deploy.sh'
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
