@@ -94,6 +94,8 @@ jobs:
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/prometheus.yml "$SSH_USER"@"$SSH_HOST":/minitwit
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/nginx.conf $SSH_USER@$SSH_HOST:/minitwit
           scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/filebeat.yml $SSH_USER@$SSH_HOST:/minitwit
+          scp -i ~/.ssh/minitwit.key -o StrictHostKeyChecking=no remote_files/.htpasswd $SSH_USER@$SSH_HOST:/minitwit
+
 
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
