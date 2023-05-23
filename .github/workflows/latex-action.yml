@@ -1,9 +1,6 @@
 name: Build LaTeX document
 
-on:
-  pull_request:
-    branches: 
-      - main
+on: [push]
     
 
 permissions:
