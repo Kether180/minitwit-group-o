@@ -57,21 +57,19 @@ services:
   elasticsearch:
     image: "docker.elastic.co/elasticsearch/elasticsearch:7.2.0"
     environment:
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - "discovery.type=single-node"
+        - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+        - "discovery.type=single-node"
     volumes:
-      - elk_elasticsearch_data:/usr/share/elasticsearch/data
+        - elk_elasticsearch_data:/usr/share/elasticsearch/data
     networks:
-      - elk
+        - elk
 
   kibana:
     image: "docker.elastic.co/kibana/kibana:7.2.0"
-    depends_on:
-      - elasticsearch
     environment:
-      - ELASTICSEARCH_URL=http://localhost:9200
+        elasticsearch.hosts: '["http://elasticsearch:9200"]'
     networks:
-      - elk
+        - elk
 
   filebeat:
     image: "docker.elastic.co/beats/filebeat:7.2.0"
@@ -82,7 +80,6 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
     networks:
         - elk
-
   nginx:
     image: nginx
     ports:
